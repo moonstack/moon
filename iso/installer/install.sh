@@ -338,7 +338,7 @@ npm install https://gitee.com/stackw0rm/elasticsearch-dump.git -g 2>&1 | dialog 
 wget http://www.moonstack.org/down/ctop-0.6.1-linux-amd64 -O ctop 2>&1 | dialog --title "[ Installing ctop ]" $myPROGRESSBOXCONF
 mv ctop /usr/bin/ 2>&1 | dialog --title "[ Installing ctop ]" $myPROGRESSBOXCONF
 chmod +x /usr/bin/ctop 2>&1 | dialog --title "[ Installing ctop ]" $myPROGRESSBOXCONF
-git clone https://gitee.com/stackw0rm/moon.git /opt/moon 2>&1 | dialog --title "[ Cloning MoonStack ]" $myPROGRESSBOXCONF
+git clone -b v1.0 --depth=1 https://gitee.com/stackw0rm/moon.git /opt/moon 2>&1 | dialog --title "[ Cloning MoonStack ]" $myPROGRESSBOXCONF
 /opt/moon/iso/installer/set_mirror.sh http://f1361db2.m.daocloud.io 2>&1 | dialog --title "[ Set Docker Mirrors ]" $myPROGRESSBOXCONF
 systemctl stop docker 2>&1 | dialog --title "[ Stop docker service ]" $myPROGRESSBOXCONF
 systemctl start docker 2>&1 | dialog --title "[ Start docker service ]" $myPROGRESSBOXCONF
