@@ -565,7 +565,7 @@ npm install https://gitee.com/stackw0rm/elasticsearch-dump.git -g 2>&1 | dialog 
 pip install --upgrade pip 2>&1 | dialog --title "[ Installing pip ]" $myPROGRESSBOXCONF
 hash -r 2>&1 | dialog --title "[ Installing pip ]" $myPROGRESSBOXCONF
 pip install elasticsearch-curator yq 2>&1 | dialog --title "[ Installing elasticsearch-curator, yq ]" $myPROGRESSBOXCONF
-git clone https://gitee.com/stackw0rm/moon.git /opt/moon 2>&1 | dialog --title "[ Cloning MoonStack ]" $myPROGRESSBOXCONF
+git clone -b v1.1 --depth=1 https://gitee.com/stackw0rm/moon.git /opt/moon 2>&1 | dialog --title "[ Cloning MoonStack ]" $myPROGRESSBOXCONF
 cp /opt/moon/iso/installer/ctop-0.7.1-linux-amd64 /usr/bin/ctop 2>&1 | dialog --title "[ Installing ctop ]" $myPROGRESSBOXCONF
 chmod +x /usr/bin/ctop 2>&1 | dialog --title "[ Installing ctop ]" $myPROGRESSBOXCONF
 /opt/moon/iso/installer/set_mirrors.sh https://0at6ledb.mirror.aliyuncs.com 2>&1 | dialog --title "[ Set Docker Mirrors From Aliyun ]" $myPROGRESSBOXCONF
