@@ -71,7 +71,7 @@ d-i user-setup/encrypt-home boolean false
 ### Country Mirror & Proxy Configuration
 ########################################
 d-i mirror/country string manual
-d-i mirror/http/hostname string archive.ubuntu.com
+d-i mirror/http/hostname string mirrors.ustc.edu.cn
 d-i mirror/http/directory string /ubuntu
 d-i mirror/http/proxy string
 
