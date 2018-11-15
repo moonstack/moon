@@ -126,7 +126,7 @@ fi
 
 # Let's check if all dependencies are met
 function fuGET_DEPS {
-local myPACKAGES="apache2-utils apparmor apt-transport-https aufs-tools bash-completion build-essential ca-certificates cgroupfs-mount cockpit cockpit-docker curl dialog dnsutils docker.io docker-compose dstat ethtool fail2ban genisoimage git glances grc html2text htop ifupdown iptables iw jq libcrack2 libltdl7 lm-sensors man multitail net-tools npm ntp openssh-server openssl pass prips syslinux psmisc pv python-pip unattended-upgrades unzip vim wireless-tools wpasupplicant"
+local myPACKAGES="apache2-utils apparmor apt-transport-https aufs-tools bash-completion build-essential ca-certificates cgroupfs-mount cockpit cockpit-docker curl dialog dnsutils docker.io docker-compose dstat ethtool fail2ban genisoimage git glances grc html2text htop ifupdown iptables iw jq libcrack2 libltdl7 lm-sensors man mosh multitail net-tools npm ntp openssh-server openssl pass prips syslinux psmisc pv python-pip unattended-upgrades unzip vim wireless-tools wpasupplicant"
 echo
 echo "### Bak /etc/apt/source.list To /etc/apt/source.list.bak"
 mv /etc/apt/sources.list /etc/apt/sources.list.bak
@@ -147,7 +147,8 @@ apt-get -y update
 echo
 echo "### Upgrading packages."
 echo
-apt-get -y dist-upgrade
+#Download and upgrade packages, but silently keep existing configs
+apt-get dist-upgrade -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" --force-yes
 echo
 echo "### Installing MoonStack dependencies."
 echo
@@ -589,7 +590,8 @@ fi
 
 # Let's patch cockpit.socket, sshd_config
 sed -i 's#ListenStream=9090#ListenStream=64294#' /lib/systemd/system/cockpit.socket 2>&1 | dialog --title "[ Cockpit listen on tcp/64294 ]" $myPROGRESSBOXCONF
-sed -i 's#\#Port 22#Port 64295#' /etc/ssh/sshd_config 2>&1 | dialog --title "[ SSH listen on tcp/64295 ]" $myPROGRESSBOXCONF
+sed -i '/^port/Id' /etc/ssh/sshd_config && echo "Port 64295" >> /etc/ssh/sshd_config 2>&1 | dialog --title "[ SSH listen on tcp/64295 ]" $myPROGRESSBOXCONF
+echo "Port 64295" >> /etc/ssh/sshd_config 2>&1 | dialog --title "[ SSH listen on tcp/64295 ]" $myPROGRESSBOXCONF
 
 # Let's make sure only myCONF_MOON_FLAVOR images will be downloaded and started
 case $myCONF_MOON_FLAVOR in
@@ -695,7 +697,7 @@ myCRONJOBS="
 */1 * * * *     root    mv --backup=numbered /data/dionaea/roots/ftp/* /data/dionaea/binaries/
 
 # Daily reboot
-27 3 * * *      root    systemctl stop moon && docker stop $(docker ps -aq) && docker rm $(docker ps -aq) && reboot
+27 3 * * *      root    systemctl stop moon && docker stop \$(docker ps -aq) || docker rm \$(docker ps -aq) || reboot
 
 # Check for updated packages every sunday, upgrade and reboot
 27 16 * * 0     root    apt-get autoclean -y && apt-get autoremove -y && apt-get update -y && apt-get upgrade -y && sleep 10 && reboot
@@ -755,10 +757,13 @@ tee -a /root/.bashrc 2>&1>/dev/null <<EOF
 $myROOTPROMPT
 PATH="$PATH:/opt/moon/bin"
 EOF
-tee -a /home/msec/.bashrc 2>&1>/dev/null <<EOF
+for i in $(ls -d /home/*/)
+   do
+ tee -a $i.bashrc 2>&1>/dev/null <<EOF
 $myUSERPROMPT
 PATH="$PATH:/opt/moon/bin"
 EOF
+done
 
 # Let's create ews.ip before reboot and prevent race condition for first start
 /opt/moon/bin/updateip.sh 2>&1>/dev/null
@@ -770,5 +775,10 @@ apt-get autoremove -y 2>&1 | dialog --title "[ Cleaning up ]" $myPROGRESSBOXCONF
 # Final steps
 cp /opt/moon/host/etc/rc.local /etc/rc.local 2>&1>/dev/null && \
 rm -rf /root/installer 2>&1>/dev/null && \
-dialog --no-ok --no-cancel --backtitle "$myBACKTITLE" --title "[ Thanks for your patience. Now rebooting. ]" --pause "" 6 80 2 && \
-reboot
+if [ "$myMOON_DEPLOYMENT_TYPE" == "auto" ];
+   then
+     echo "Done. Please reboot."
+   else
+     dialog --no-ok --no-cancel --backtitle "$myBACKTITLE" --title "[ Thanks for your patience. Now rebooting. ]" --pause "" 6 80 2 && \
+     reboot
+ fi
