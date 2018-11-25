@@ -126,7 +126,7 @@ fi
 
 # Let's check if all dependencies are met
 function fuGET_DEPS {
-local myPACKAGES="apache2-utils apparmor apt-transport-https aufs-tools bash-completion build-essential ca-certificates cgroupfs-mount cockpit cockpit-docker curl dialog dnsutils docker.io docker-compose dstat ethtool fail2ban genisoimage git glances grc html2text htop ifupdown iptables iw jq libcrack2 libltdl7 lm-sensors man mosh multitail net-tools npm ntp openssh-server openssl pass prips syslinux psmisc pv python-pip unattended-upgrades unzip vim wireless-tools wpasupplicant"
+local myPACKAGES="apache2-utils apparmor apt-transport-https aufs-tools bash-completion build-essential ca-certificates cgroupfs-mount cockpit cockpit-docker curl debconf-utils  dialog dnsutils docker.io docker-compose dstat ethtool fail2ban genisoimage git glances grc html2text htop ifupdown iptables iw jq libcrack2 libltdl7 lm-sensors man mosh multitail net-tools npm ntp openssh-server openssl pass prips software-properties-common syslinux psmisc pv python-pip unattended-upgrades unzip vim wireless-tools wpasupplicant"
 echo
 echo "### Bak /etc/apt/source.list To /etc/apt/source.list.bak"
 mv /etc/apt/sources.list /etc/apt/sources.list.bak
@@ -148,7 +148,9 @@ echo
 echo "### Upgrading packages."
 echo
 #Download and upgrade packages, but silently keep existing configs
-apt-get dist-upgrade -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" --force-yes
+echo "docker.io docker.io/restart       boolean true" | debconf-set-selections -v
+echo "debconf debconf/frontend select noninteractive" | debconf-set-selections -v
+apt-get -y dist-upgrade -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" --force-yes
 echo
 echo "### Installing MoonStack dependencies."
 echo
@@ -339,7 +341,7 @@ if [ "$myMOON_DEPLOYMENT_TYPE" == "iso" ] || [ "$myMOON_DEPLOYMENT_TYPE" == "use
     "SENSOR" "Just Honeypots, EWS Poster & NSM" \
     "INDUSTRIAL" "Conpot, RDPY, Vnclowpot, ELK, NSM & Tools" \
     "COLLECTOR" "Heralding, ELK, NSM & Tools" \
-    "EXPERIMENTAL" "Experimental (Glutton instead of Honeytrap)" \
+    "NEXTGEN" "NextGen (Glutton instead of Honeytrap)" \
     "LEGACY" "Standard Edition from previous release" 3>&1 1>&2 2>&3 3>&-)
 fi
 
@@ -611,9 +613,9 @@ case $myCONF_MOON_FLAVOR in
     echo "### Preparing COLLECTOR flavor installation."
     ln -s /opt/moon/etc/compose/collector.yml $myMOONCOMPOSE 2>&1>/dev/null
   ;;
-  EXPERIMENTAL)
-    echo "### Preparing EXPERIMENTAL flavor installation."
-    ln -s /opt/moon/etc/compose/experimental.yml $myMOONCOMPOSE 2>&1>/dev/null
+  NEXTGEN)
+    echo "### Preparing NEXTGEN flavor installation."
+    ln -s /opt/moon/etc/compose/nextgen.yml $myMOONCOMPOSE 2>&1>/dev/null
   ;;
   LEGACY)
     echo "### Preparing LEGACY flavor installation."

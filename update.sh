@@ -145,6 +145,17 @@ fi
 echo
 }
 
+# Remove old images for specific tag
+function fuREMOVEOLDIMAGES () {
+local myOLDTAG=$1
+local myOLDIMAGES=$(docker images | grep -c "$myOLDTAG")
+if [ "$myOLDIMAGES" -gt "0" ];
+  then
+    echo "### Removing old docker images."
+    docker rmi $(docker images | grep "$myOLDTAG" | awk '{print $3}')
+fi
+}
+
 # Let's load docker images in parallel
 function fuPULLIMAGES {
 local myMOONCOMPOSE="/opt/moon/etc/moon.yml"
@@ -157,16 +168,20 @@ echo
 }
 
 function fuUPDATER () {
-local myPACKAGES="apache2-utils apparmor apt-transport-https aufs-tools bash-completion build-essential ca-certificates cgroupfs-mount cockpit cockpit-docker curl dialog dnsutils docker.io docker-compose dstat ethtool fail2ban genisoimage git glances grc html2text htop ifupdown iptables iw jq libcrack2 libltdl7 lm-sensors man multitail net-tools npm ntp openssh-server openssl pass prips syslinux psmisc pv python-pip unattended-upgrades unzip vim wireless-tools wpasupplicant"
+local myPACKAGES="apache2-utils apparmor apt-transport-https aufs-tools bash-completion build-essential ca-certificates cgroupfs-mount cockpit cockpit-docker curl debconf-utils  dialog dnsutils docker.io docker-compose dstat ethtool fail2ban genisoimage git glances grc html2text htop ifupdown iptables iw jq libcrack2 libltdl7 lm-sensors man mosh  multitail net-tools npm ntp openssh-server openssl pass prips software-properties-common syslinux psmisc pv python-pip unattended-upgrades unzip vim wireless-tools wpasupplicant"
 echo "### Now upgrading packages ..."
+dpkg --configure -a
 apt-get -y autoclean
 apt-get -y autoremove
 apt-get update
 apt-get -y install $myPACKAGES
-# Some updates require interactive attention, you can override that for unattended upgrades.
-# Be warned, this can easily break your system.
-# apt-get dist-upgrade -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" --force-yes
-apt-get -y dist-upgrade
+
+# Some updates require interactive attention, and the following settings will override that.
+echo "docker.io docker.io/restart       boolean true" | debconf-set-selections -v
+echo "debconf debconf/frontend select noninteractive" | debconf-set-selections -v
+apt-get -y dist-upgrade -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" --force-yes
+
+dpkg --configure -a
 npm install "https://gitee.com/stackw0rm/elasticsearch-dump.git" -g
 pip install --upgrade pip
 hash -r
@@ -184,6 +199,7 @@ echo "### Now pulling latest docker images"
 echo "######$myBLUE This might take a while, please be patient!$myWHITE"
 fuPULLIMAGES 2>&1>/dev/null
 
+fuREMOVEOLDIMAGES "v1.1"
 echo "### If you made changes to moon.yml please ensure to add them again."
 echo "### We stored the previous version as backup in /root/."
 echo "### Done, please reboot."
