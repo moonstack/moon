@@ -1,20 +1,20 @@
 ####################################################
 ### MoonStack Preseed Configuration File by feng ###
-###################################################
+####################################################
 
 ####################
 ### Locale Selection
 ####################
 #d-i debian-installer/country string CN
-d-i debian-installer/language string en
-d-i debian-installer/locale string en_US.UTF-8
-d-i localechooser/preferred-locale string en_US.UTF-8
+d-i debian-installer/language string zh_CN
+d-i debian-installer/locale string zh_CN.UTF-8
+d-i localechooser/preferred-locale string zh_CN.UTF-8
 
 ######################
 ### Keyboard Selection
 ######################
 #d-i console-setup/ask_detect boolean true
-#d-i keyboard-configuration/layoutcode string cn
+d-i keyboard-configuration/layoutcode string us
 d-i console-setup/detected note
 
 #############################
@@ -28,7 +28,7 @@ d-i console-setup/detected note
 d-i netcfg/do_not_use_netplan true
 #d-i netcfg/choose_interface select auto
 #d-i netcfg/dhcp_timeout string 60
-d-i netcfg/get_hostname string moon
+d-i netcfg/get_hostname string moonstack
 
 ###############
 ### Disk Layout
@@ -71,7 +71,7 @@ d-i user-setup/encrypt-home boolean false
 ### Country Mirror & Proxy Configuration
 ########################################
 d-i mirror/country string manual
-d-i mirror/http/hostname string archive.ubuntu.com
+d-i mirror/http/hostname string mirrors.aliyun.com
 d-i mirror/http/directory string /ubuntu
 d-i mirror/http/proxy string
 
@@ -87,9 +87,9 @@ d-i lilo-installer/skip boolean true
 ######################
 ### Time Configuration
 ######################
-#d-i time/zone string Asia/Shanghai
+d-i time/zone string Asia/Shanghai
 d-i clock-setup/utc boolean true
-d-i time/zone string UTC
+#d-i time/zone string UTC
 d-i clock-setup/ntp boolean true
 d-i clock-setup/ntp-server string ntp.ubuntu.com
 
@@ -101,7 +101,7 @@ tasksel tasksel/first multiselect ubuntu-server
 ########################
 ### Package Installation
 ########################
-d-i pkgsel/include string apache2-utils apparmor apt-transport-https aufs-tools bash-completion build-essential ca-certificates cgroupfs-mount cockpit cockpit-docker curl dialog dnsutils docker.io docker-compose dstat ethtool fail2ban genisoimage git glances grc html2text htop ifupdown iptables iw jq libcrack2 libltdl7 lm-sensors man multitail net-tools npm ntp openssh-server openssl pass prips syslinux psmisc pv python-pip unzip vim wireless-tools wpasupplicant
+d-i pkgsel/include string apache2-utils apparmor apt-transport-https aufs-tools bash-completion build-essential ca-certificates cgroupfs-mount cockpit cockpit-docker curl debconf-utils dialog dnsutils docker.io docker-compose dstat ethtool fail2ban genisoimage git glances grc html2text htop ifupdown iptables iw jq libcrack2 libltdl7 lm-sensors man mosh multitail net-tools npm ntp openssh-server openssl pass prips software-properties-common syslinux psmisc pv python-pip unzip vim wireless-tools wpasupplicant
 
 #################
 ### Update Policy
@@ -114,15 +114,16 @@ d-i pkgsel/update-policy select unattended-upgrades
 d-i debian-installer/quiet boolean false
 d-i debian-installer/splash boolean false
 
-#########################################
+#############################################
 ### Post install (Grub & MoonStack Installer)
-#########################################
+#############################################
 d-i preseed/late_command string \
 in-target apt-get -y install grub-pc; \
 in-target grub-install --force $(debconf-get partman-auto/disk); \
 in-target update-grub; \
-cp /opt/installer/rc.local.install /target/etc/rc.local; \
-cp /opt/installer -R /target/root/;
+in-target git clone https://gitee.com/stackw0rm/moon.git /opt/moon; \
+cp /target/opt/moon/iso/installer/rc.local.install /target/etc/rc.local; \
+cp /target/opt/moon/iso/installer -R /target/root/;
 
 ##########
 ### Reboot

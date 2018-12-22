@@ -3,7 +3,7 @@
 # set backtitle, get filename
 myBACKTITLE="MoonStack Edition Selection Tool"
 myYMLS=$(cd /opt/moon/etc/compose/ && ls -1 *.yml)
-myLINK="/opt/moon/etc/moon.yml"
+myLINK="/opt/Moon/etc/moon.yml"
 
 # Let's load docker images in parallel
 function fuPULLIMAGES {
@@ -19,9 +19,9 @@ echo
 # setup menu
 for i in $myYMLS;
   do
-    myITEMS+="$i $(echo $i | cut -d "." -f1 | tr [:lower:] [:upper:]) " 
+    myITEMS+="$i $(echo $i | cut -d "." -f1 | tr [:lower:] [:upper:]) "
 done
-myEDITION=$(dialog --backtitle "$myBACKTITLE" --menu "Select MoonStack Edition" 13 50 6 $myITEMS 3>&1 1>&2 2>&3 3>&-)
+myEDITION=$(dialog --backtitle "$myBACKTITLE" --menu "Select Moonstack Edition" 13 50 6 $myITEMS 3>&1 1>&2 2>&3 3>&-)
 if [ "$myEDITION" == "" ];
   then
     echo "Have a nice day!"
@@ -43,6 +43,6 @@ if [ "$myOK" == "0" ];
     fuPULLIMAGES
     systemctl start moon
     echo "Done. Use \"dps.sh\" for monitoring"
-  else 
+  else
     echo "Have a nice day!"
 fi
