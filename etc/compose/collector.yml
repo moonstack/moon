@@ -1,6 +1,6 @@
 # MoonStack (Collector)
 # Do not erase ports sections, these are used by /opt/moon/bin/rules.sh to setup iptables ACCEPT rules for NFQ (honeytrap / glutton)
-version: '2.3'
+version: 'v1.2'
 
 networks:
   cyberchef_local:
@@ -35,7 +35,7 @@ services:
      - "995:995"
      - "5432:5432"
      - "5900:5900"
-    image: "moonstack/heralding:v1.1"
+    image: "moonstack/heralding:v1.2"
     read_only: true
     volumes:
      - /data/heralding/log:/var/log/heralding
@@ -49,7 +49,7 @@ services:
     network_mode: "host"
     cap_add:
      - NET_ADMIN
-    image: "moonstack/honeytrap:v1.1"
+    image: "moonstack/honeytrap:v1.2"
     read_only: true
     volumes:
      - /data/honeytrap/attacks:/opt/honeytrap/var/attacks
@@ -66,7 +66,7 @@ services:
     container_name: p0f
     restart: always
     network_mode: "host"
-    image: "moonstack/p0f:v1.1"
+    image: "moonstack/p0f:v1.2"
     read_only: true
     volumes:
      - /data/p0f/log:/var/log/p0f
@@ -83,7 +83,7 @@ services:
      - NET_ADMIN
      - SYS_NICE
      - NET_RAW
-    image: "moonstack/suricata:v1.1"
+    image: "moonstack/suricata:v1.2"
     volumes:
      - /data/suricata/log:/var/log/suricata
 
@@ -100,7 +100,7 @@ services:
      - cyberchef_local
     ports:
      - "127.0.0.1:64299:8000"
-    image: "moonstack/cyberchef:v1.1"
+    image: "moonstack/cyberchef:v1.2"
     read_only: true
 
 #### ELK
@@ -124,7 +124,7 @@ services:
     mem_limit: 4g
     ports:
      - "127.0.0.1:64298:9200"
-    image: "moonstack/elasticsearch:v1.1"
+    image: "moonstack/elasticsearch:v1.2"
     volumes:
      - /data:/data
 
@@ -137,7 +137,7 @@ services:
         condition: service_healthy
     ports:
      - "127.0.0.1:64296:5601"
-    image: "moonstack/kibana:v1.1"
+    image: "moonstack/kibana:v1.2"
 
 ## Logstash service
   logstash:
@@ -148,7 +148,7 @@ services:
         condition: service_healthy
     env_file:
      - /opt/moon/etc/compose/elk_environment
-    image: "moonstack/logstash:v1.1"
+    image: "moonstack/logstash:v1.2"
     volumes:
      - /data:/data
 
@@ -161,7 +161,7 @@ services:
         condition: service_healthy
     ports:
      - "127.0.0.1:64302:9100"
-    image: "moonstack/head:v1.1"
+    image: "moonstack/head:v1.2"
     read_only: true
 
 # Ewsposter service
@@ -172,7 +172,7 @@ services:
      - ewsposter_local
     env_file:
      - /opt/moon/etc/compose/elk_environment
-    image: "moonstack/ewsposter:v1.1"
+    image: "moonstack/ewsposter:v1.2"
     volumes:
      - /data:/data
      - /data/ews/conf/ews.ip:/opt/ewsposter/ews.ip
@@ -191,7 +191,7 @@ services:
     network_mode: "host"
     ports:
      - "64297:64297"
-    image: "moonstack/nginx:v1.1"
+    image: "moonstack/nginx:v1.2"
     read_only: true
     volumes:
      - /data/nginx/cert/:/etc/nginx/cert/:ro
@@ -206,6 +206,6 @@ services:
      - spiderfoot_local
     ports:
      - "127.0.0.1:64303:8080"
-    image: "moonstack/spiderfoot:v1.1"
+    image: "moonstack/spiderfoot:v1.2"
     volumes:
      - /data/spiderfoot/spiderfoot.db:/home/spiderfoot/spiderfoot.db

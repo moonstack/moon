@@ -1,35 +1,33 @@
 #!/bin/bash
-# MoonStack Universal Installer
+# MoonStack通用安装程序
 
-##################################
-# Extract command line arguments #
-##################################
+#################
+# 提取命令行参数 #
+#################
 
 myLSB=$(lsb_release -r | awk '{ print $2 }')
 myLSB_SUPPORTED="18.04"
 myINFO="\
-################################################
-### MoonStack Installer for Ubuntu $myLSB_SUPPORTED LTS ###
-################################################
-
-Disclaimer:
-This script will install MoonStack on this system, by running the script you know what you are doing:
-1. SSH will be reconfigured to tcp/64295
-2. Some packages will be installed, some will be upgraded
-3. Please ensure other means of access to this system in case something goes wrong.
-4. At best this script well be executed on the console instead through a SSH session.
-
+############################################
+### MoonStack安装基于 Ubuntu $myLSB_SUPPORTED LTS ###
+############################################
+免责声明：
+此脚本将在此系统上安装 MoonStack, 您需要知道这个脚本会做哪些工作:
+1. ssh 端口将重新配置为 tcp/64295
+2. 一些软件包将被安装, 有些将被升级
+3. 如有问题, 请确保可以使用其他方式访问本系统
+4. 只能通过 ssh 会话在控制台上执行此脚本
 ###########################################
 
-Usage:
-        $0 --help - Help.
+使用帮助:
+        $0 --help - 帮助.
 
-Example:
-        $0 --type=user - Best option for most users."
+例如:
+        $0 --type=user - 大多数用户的最佳选择."
 
 if [ "$myLSB" != "$myLSB_SUPPORTED" ];
   then
-    echo "Aborting. Ubuntu $myLSB is not supported (Ubuntu For $myLSB_SUPPORTED)."
+    echo "该脚本意外终止. MoonStack安装脚本不支持当前 Ubuntu $myLSB 版本."
     exit
 fi
 if [ "$1" == "" ];
@@ -60,13 +58,13 @@ for i in "$@"
         echo "Usage: $0 <options>"
         echo
         echo "--conf=<Path to \"moon.conf\">"
-	echo "  Use this if you want to automatically deploy a MoonStack instance (--type=auto implied)."
-        echo "  A configuration example is available in \"moon/iso/installer/moon.conf.dist\"."
+	      echo "  如果您需要自动部署 MoonStack 实例,请使用此选项 (--type=auto)."
+        echo "  我们提供了一个配置文件示例 \"moon/iso/installer/moon.conf.dist\"."
         echo
         echo "--type=<[user, auto, iso]>"
-        echo "  user, use this if you want to manually install a MoonStack on a Ubuntu 18.04 LTS machine."
-        echo "  auto, implied if a configuration file is passed as an argument for automatic deployment."
-        echo "  iso, use this if you are a MoonStack developer and want to install a MoonStack from a pre-compiled iso."
+        echo "  user 选项: 如果您需要手动安装 MoonStack 在 Ubuntu 18.04 LTS 上,请使用此选项."
+        echo "  auto 选项: 如果使用配置文件作为自动部署参数传递,请使用此选项."
+        echo "  iso  选项: 如果您是 MoonStack 开发人员,想要从预编译的 iso 安装 MoonStack ,请使用此选项."
         echo
 	exit
       ;;
@@ -78,14 +76,14 @@ for i in "$@"
   done
 
 
-###################################################
-# Validate command line arguments and load config #
-###################################################
+########################
+# 验证命令参数并加载配置 #
+########################
 
-# If a valid config file exists, set deployment type to "auto" and load the configuration
+# 如果存在有效的配置文件, 请将部署类型设置为 'auto' 并加载配置
 if [ "$myMOON_DEPLOYMENT_TYPE" == "auto" ] && [ "$myMOON_CONF_FILE" == "" ];
   then
-    echo "Aborting. No configuration file given."
+    echo "意外停止.未提供配置文件."
     exit
 fi
 if [ -s "$myMOON_CONF_FILE" ] && [ "$myMOON_CONF_FILE" != "" ];
@@ -95,99 +93,116 @@ if [ -s "$myMOON_CONF_FILE" ] && [ "$myMOON_CONF_FILE" != "" ];
       then
         source "$myMOON_CONF_FILE"
       else
-	echo "Aborting. Config file \"$myMOON_CONF_FILE\" not a MoonStack configuration file."
+	echo "意外停止. \"$myMOON_CONF_FILE\" 该配置文件不是 MoonStack 配置文件."
         exit
       fi
   elif ! [ -s "$myMOON_CONF_FILE" ] && [ "$myMOON_CONF_FILE" != "" ];
     then
-      echo "Aborting. Config file \"$myMOON_CONF_FILE\" not found."
+      echo "意外停止. 在 \"$myMOON_CONF_FILE\" 位置没有找到配置文件."
       exit
 fi
 
 
-#######################
-# Prepare environment #
-#######################
+############
+# 准备环境 #
+###########
 
-# Got root?
+# 获取Root权限
 function fuGOT_ROOT {
 echo
-echo -n "### Checking for root: "
+echo -n "### 检查 Root 权限: "
 if [ "$(whoami)" != "root" ];
   then
-    echo "[ NOT OK ]"
-    echo "### Please run as root."
-    echo "### Example: sudo $0"
+    echo "[ 错误 ]"
+    echo "### 请使用 Root 权限运行."
+    echo "### 用例: sudo $0"
     exit
   else
-    echo "[ OK ]"
+    echo "[ 成功 ]"
 fi
 }
 
-# Let's check if all dependencies are met
+# 检查所有依赖项
 function fuGET_DEPS {
+<<<<<<< HEAD
+local myPACKAGES="apache2-utils apparmor apt-transport-https aufs-tools bash-completion build-essential ca-certificates cgroupfs-mount cockpit cockpit-docker curl debconf-utils dialog dnsutils docker.io docker-compose dstat ethtool fail2ban genisoimage git glances grc html2text htop ifupdown iptables iw jq libcrack2 libltdl7 lm-sensors man mosh multitail net-tools npm ntp openssh-server openssl pass prips software-properties-common syslinux psmisc pv python-pip unattended-upgrades unzip vim wireless-tools wpasupplicant"
+=======
 local myPACKAGES="apache2-utils apparmor apt-transport-https aufs-tools bash-completion build-essential ca-certificates cgroupfs-mount cockpit cockpit-docker curl debconf-utils  dialog dnsutils docker.io docker-compose dstat ethtool fail2ban genisoimage git glances grc html2text htop ifupdown iptables iw jq libcrack2 libltdl7 lm-sensors man mosh multitail net-tools npm ntp openssh-server openssl pass prips software-properties-common syslinux psmisc pv python-pip unattended-upgrades unzip vim wireless-tools wpasupplicant"
+>>>>>>> origin/master
 echo
-echo "### Bak /etc/apt/source.list To /etc/apt/source.list.bak"
+echo "### 备份 /etc/apt/source.list 到 /etc/apt/source.list.bak"
 mv /etc/apt/sources.list /etc/apt/sources.list.bak
 echo
-echo "Write sources.list For mirrors.ustc.edu.cn"
-echo "deb https://mirrors.ustc.edu.cn/ubuntu/ bionic main restricted universe multiverse" > /etc/apt/sources.list
-echo "deb-src https://mirrors.ustc.edu.cn/ubuntu/ bionic main restricted universe multiverse" >> /etc/apt/sources.list
-echo "deb https://mirrors.ustc.edu.cn/ubuntu/ bionic-security main restricted universe multiverse" >> /etc/apt/sources.list
-echo "deb-src https://mirrors.ustc.edu.cn/ubuntu/ bionic-security main restricted universe multiverse" >> /etc/apt/sources.list
-echo "deb https://mirrors.ustc.edu.cn/ubuntu/ bionic-updates main restricted universe multiverse" >> /etc/apt/sources.list
-echo "deb-src https://mirrors.ustc.edu.cn/ubuntu/ bionic-updates main restricted universe multiverse" >> /etc/apt/sources.list
-echo "deb https://mirrors.ustc.edu.cn/ubuntu/ bionic-backports main restricted universe multiverse" >> /etc/apt/sources.list
-echo "deb-src https://mirrors.ustc.edu.cn/ubuntu/ bionic-backports main restricted universe multiverse" >> /etc/apt/sources.list
+echo "Write sources.list For mirrors.aliyun.com"
+echo "deb https://mirrors.aliyun.com/ubuntu/ bionic main restricted universe multiverse" > /etc/apt/sources.list
+echo "deb-src https://mirrors.aliyun.com/ubuntu/ bionic main restricted universe multiverse" >> /etc/apt/sources.list
+echo "deb https://mirrors.aliyun.com/ubuntu/ bionic-security main restricted universe multiverse" >> /etc/apt/sources.list
+echo "deb-src https://mirrors.aliyun.com/ubuntu/ bionic-security main restricted universe multiverse" >> /etc/apt/sources.list
+echo "deb https://mirrors.aliyun.com/ubuntu/ bionic-updates main restricted universe multiverse" >> /etc/apt/sources.list
+echo "deb-src https://mirrors.aliyun.com/ubuntu/ bionic-updates main restricted universe multiverse" >> /etc/apt/sources.list
+echo "deb https://mirrors.aliyun.com/ubuntu/ bionic-backports main restricted universe multiverse" >> /etc/apt/sources.list
+echo "deb-src https://mirrors.aliyun.com/ubuntu/ bionic-backports main restricted universe multiverse" >> /etc/apt/sources.list
 echo
-echo "### Getting update information."
+echo "### 开始更新系统."
 echo
 apt-get -y update
+apt-get -y install software-properties-common
+add-apt-repository "deb http://mirrors.aliyun.com/ubuntu $(lsb_release -sc) main universe restricted multiverse"
 echo
-echo "### Upgrading packages."
+echo "### 获取更新信息."
 echo
+<<<<<<< HEAD
+apt-get -y update
+echo
+echo "### 获取更新软件包."
+=======
 #Download and upgrade packages, but silently keep existing configs
 echo "docker.io docker.io/restart       boolean true" | debconf-set-selections -v
 echo "debconf debconf/frontend select noninteractive" | debconf-set-selections -v
 apt-get -y dist-upgrade -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" --force-yes
+>>>>>>> origin/master
 echo
-echo "### Installing MoonStack dependencies."
+# 下载和升级软件包,默认保留所有配置
+echo "docker.io docker.io/restart       boolean true" | debconf-set-selections -v
+echo "debconf debconf/frontend select noninteractive" | debconf-set-selections -v
+apt-get -y dist-upgrade -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" --force-yes
+echo
+echo "### 安装 MoonStack 依赖."
 echo
 apt-get -y install $myPACKAGES
 }
 
-# Let's load dialog color theme
+# 加载对话框主题
 function fuDIALOG_SETUP {
 echo
-echo -n "### Checking for dialogrc: "
+echo -n "### 检查 dialogrc 文件: "
 if [ -f "dialogrc" ];
   then
-    echo "[ OK ]"
+    echo "[ 完成 ]"
     cp dialogrc /etc/
   else
-    echo "[ NOT OK ]"
-    echo "### 'dialogrc' is missing. Please run 'install.sh' from within the setup folder."
+    echo "[ 错误 ]"
+    echo "###加载 'dialogrc' 文件错误. 请在安装目录运行 'install.sh' 脚本."
     exit
   fi
 }
 
-# Let's check for other services
+# 检查其他服务
 function fuCHECK_PORTS {
 if [ "$myMOON_DEPLOYMENT_TYPE" == "user" ];
   then
     echo
-    echo "### Checking for active services."
+    echo "### 检查正在运行的服务."
     echo
     grc netstat -tulpen
     echo
-    echo "### Please review your running services."
-    echo "### We will take care of SSH (22), but other services i.e. FTP (21), TELNET (23), SMTP (25), HTTP (80), HTTPS (443), etc."
-    echo "### might collide with MoonStack's honeypots and prevent MoonStack from starting successfully."
+    echo "### 请查看您正在运行的服务."
+    echo "### MoonStack 将修改 SSH (22) 端口, 但是其他服务,例如: FTP (21), TELNET (23), SMTP (25), HTTP (80), HTTPS (443), etc."
+    echo "### 可能会与 MoonStack 蜜罐冲突, 导致 MoonStack 无法正常启动."
     echo
     while [ 1 != 2 ]
       do
-        read -s -n 1 -p "Continue [y/n]? " mySELECT
+        read -s -n 1 -p "继续 [y/n]? " mySELECT
 	echo
         case "$mySELECT" in
           [y,Y])
@@ -202,7 +217,7 @@ fi
 }
 
 
-# Prepare running the installer
+# 准备运行安装程序
 echo "$myINFO" | head -n 3
 fuGOT_ROOT
 fuGET_DEPS
@@ -210,27 +225,27 @@ fuCHECK_PORTS
 fuDIALOG_SETUP
 
 
-#############
-# Installer #
-#############
+############
+# 安装程序 #
+############
 
-# Set TERM, DIALOGRC
+# 设置 TERM, DIALOGRC
 export TERM=linux
 export DIALOGRC=/etc/dialogrc
 
-#######################
-# Global vars section #
-#######################
+###############
+# 全局变量设置 #
+###############
 
-myBACKTITLE="MoonStack-Installer"
+myBACKTITLE="MoonStack 安装程序"
 myCONF_FILE="/root/installer/iso.conf"
 myPROGRESSBOXCONF=" --backtitle "$myBACKTITLE" --progressbox 24 80"
-mySITES="https://hub.docker.com https://github.com https://pypi.python.org https://ubuntu.com"
+mySITES="https://hub.docker.com https://gitee.com https://pypi.python.org https://ubuntu.com"
 myMOONCOMPOSE="/opt/moon/etc/moon.yml"
 
-#####################
-# Functions section #
-#####################
+############
+# 功能函数 #
+###########
 
 fuRANDOMWORD () {
   local myWORDFILE="$1"
@@ -240,31 +255,31 @@ fuRANDOMWORD () {
   echo -n $(sed -n "$myNUM p" $myWORDFILE | tr -d \' | tr A-Z a-z)
 }
 
-# If this is a ISO installation we need to wait a few seconds to avoid interference with service messages
+# 如果这是ISO安装,请等待几秒钟,避免干扰服务消息
 if [ "$myMOON_DEPLOYMENT_TYPE" == "iso" ];
   then
     sleep 5
     tput civis
-    dialog --no-ok --no-cancel --backtitle "$myBACKTITLE" --title "[ Wait to avoid interference with service messages ]" --pause "" 6 80 7
+    dialog --no-ok --no-cancel --backtitle "$myBACKTITLE" --title "[ 等待几秒钟, 避免干扰服务消息 ]" --pause "" 6 80 7
 fi
 
-# Let's load the iso config file if there is one
+# 如果有 ISO 配置文件,则加载
 if [ -f $myCONF_FILE ];
   then
-    dialog --backtitle "$myBACKTITLE" --title "[ Found personalized iso.config ]" --msgbox "\nYour personalized settings will be applied!" 7 47
+    dialog --backtitle "$myBACKTITLE" --title "[ 找到 iso.config 配置文件 ]" --msgbox "\n该配置文件将被应用!" 7 47
     source $myCONF_FILE
   else
-    # dialog logic considers 1=false, 0=true
+    # 对话框逻辑 1=false, 0=true
     myCONF_PROXY_USE="1"
     myCONF_PFX_USE="1"
     myCONF_NTP_USE="1"
 fi
 
 
-### <--- Begin proxy setup
-# If a proxy is set in iso.conf it needs to be setup.
-# However, none of the other installation types will automatically take care of a proxy.
-# Please open a feature request if you think this is something worth considering.
+### <--- 使用代理方式安装
+# 如果在 iso.config 中使用了代理, 则需要对其进行设置.
+# 但是, 其他安装类型都不会自动处理代理设置.
+# 如果需要再考虑一下, 请打开一个功能请求.
 myPROXY="http://$myCONF_PROXY_IP:$myCONF_PROXY_PORT"
 myPROXY_ENV="export http_proxy=$myPROXY
 export https_proxy=$myPROXY
@@ -284,57 +299,67 @@ no_proxy=localhost,127.0.0.1,.sock
 
 if [ "$myCONF_PROXY_USE" == "0" ];
   then
-    # Let's setup proxy for the environment
-    echo "$myPROXY_ENV" 2>&1 | tee -a /etc/environment | dialog --title "[ Setting up the proxy ]" $myPROGRESSBOXCONF
+    # 为环境设置代理
+    echo "$myPROXY_ENV" 2>&1 | tee -a /etc/environment | dialog --title "[ 正在为 environment 设置代理 ]" $myPROGRESSBOXCONF
     source /etc/environment
 
-    # Let's setup the proxy for apt
-    echo "$myPROXY_APT" 2>&1 | tee /etc/apt/apt.conf | dialog --title "[ Setting up the proxy ]" $myPROGRESSBOXCONF
+    # 为 apt 设置代理
+    echo "$myPROXY_APT" 2>&1 | tee /etc/apt/apt.conf | dialog --title "[ 正在为 apt 设置代理 ]" $myPROGRESSBOXCONF
 
-    # Let's add proxy settings to docker defaults
-    echo "$myPROXY_DOCKER" 2>&1 | tee -a /etc/default/docker | dialog --title "[ Setting up the proxy ]" $myPROGRESSBOXCONF
+    # 为 docker 设置代理
+    echo "$myPROXY_DOCKER" 2>&1 | tee -a /etc/default/docker | dialog --title "[ 正在为 docker 设置代理 ]" $myPROGRESSBOXCONF
 
-    # Let's restart docker for proxy changes to take effect
-    systemctl stop docker 2>&1 | dialog --title "[ Stop docker service ]" $myPROGRESSBOXCONF
-    systemctl start docker 2>&1 | dialog --title "[ Start docker service ]" $myPROGRESSBOXCONF
+    # 重新启动 docker 使代理生效
+    systemctl stop docker 2>&1 | dialog --title "[ 停止 docker 服务 ]" $myPROGRESSBOXCONF
+    systemctl start docker 2>&1 | dialog --title "[ 启动 docker 服务 ]" $myPROGRESSBOXCONF
 fi
-### ---> End proxy setup
+### ---> 代理安装结束
 
-# Let's test the internet connection
+# 测试互联网连接
 if [ "$myMOON_DEPLOYMENT_TYPE" == "iso" ] || [ "$myMOON_DEPLOYMENT_TYPE" == "user" ];
   then
     mySITESCOUNT=$(echo $mySITES | wc -w)
     j=0
     for i in $mySITES;
       do
-        curl --connect-timeout 30 -IsS $i 2>&1>/dev/null | dialog --title "[ Testing the internet connection ]" --backtitle "$myBACKTITLE" \
-                                                                  --gauge "\n  Now checking: $i\n" 8 80 $(expr 100 \* $j / $mySITESCOUNT)
+        curl --connect-timeout 30 -IsS $i 2>&1>/dev/null | dialog --title "[ 正在检测互联网连接 ]" --backtitle "$myBACKTITLE" \
+                                                                  --gauge "\n  现在检测: $i\n" 8 80 $(expr 100 \* $j / $mySITESCOUNT)
         if [ $? -ne 0 ];
           then
-            dialog --backtitle "$myBACKTITLE" --title "[ Continue? ]" --yesno "\nInternet connection test failed. This might indicate some problems with your connection. You can continue, but the installation might fail." 10 50
+            dialog --backtitle "$myBACKTITLE" --title "[ 继续? ]" --yesno "\n互联网连接检测失败. 这表示您的互联网连接存在一些问题. 您可以继续, 但可能会安装失败." 10 50
             if [ $? = 1 ];
               then
-                dialog --backtitle "$myBACKTITLE" --title "[ Abort ]" --msgbox "\nInstallation aborted. Exiting the installer." 7 50
+                dialog --backtitle "$myBACKTITLE" --title "[ 意外终止 ]" --msgbox "\n安装意外终止, 退出安装程序." 7 50
                 exit
               else
                 break;
             fi;
         fi;
       let j+=1
-      echo 2>&1>/dev/null | dialog --title "[ Testing the internet connection ]" --backtitle "$myBACKTITLE" \
-                                                                                 --gauge "\n  Now checking: $i\n" 8 80 $(expr 100 \* $j / $mySITESCOUNT)
+      echo 2>&1>/dev/null | dialog --title "[ 检测互联网连接 ]" --backtitle "$myBACKTITLE" \
+                                                                                 --gauge "\n  现在检测: $i\n" 8 80 $(expr 100 \* $j / $mySITESCOUNT)
     done;
 fi
-# Let's put cursor back in standard form
+# 以标准形式将光标放回原处
 tput cnorm
 
-####################
-# User interaction #
-####################
+############
+# 用户交互 #
+############
 
-# Let's ask the user for install flavor
+# 向用户询问安装风格
 if [ "$myMOON_DEPLOYMENT_TYPE" == "iso" ] || [ "$myMOON_DEPLOYMENT_TYPE" == "user" ];
   then
+<<<<<<< HEAD
+    myCONF_MOON_FLAVOR=$(dialog --no-cancel --backtitle "$myBACKTITLE" --title "[ 选择需要安装的 MoonStack 风格 ]" --menu \
+    "\n基本配置: 6GB RAM, 128GB SSD\n推荐配置: 8GB RAM, 256GB SSD" 15 70 7 \
+    "STANDARD" "标准安装: 蜜罐, ELK, 识别引擎 & 工具" \
+    "SENSOR" "传感器: 只有(Ews, Poster)蜜罐 & 识别引擎" \
+    "INDUSTRIAL" "工控场景: 只有(Conpot, RDPY, Vnclowpot)蜜罐 ELK, 识别引擎 & 工具" \
+    "COLLECTOR" "采集场景: Heralding, ELK, 识别引擎 & 工具" \
+    "NEXTGEN" "下一代蜜网: Glutton 而不是传统蜜罐" \
+    "LEGACY" "标准版(旧): 之前版本中的标准版" 3>&1 1>&2 2>&3 3>&-)
+=======
     myCONF_MOON_FLAVOR=$(dialog --no-cancel --backtitle "$myBACKTITLE" --title "[ Choose Your MoonStack NG Edition ]" --menu \
     "\nRequired: 6GB RAM, 128GB SSD\nRecommended: 8GB RAM, 256GB SSD" 15 70 7 \
     "STANDARD" "Honeypots, ELK, NSM & Tools" \
@@ -343,9 +368,10 @@ if [ "$myMOON_DEPLOYMENT_TYPE" == "iso" ] || [ "$myMOON_DEPLOYMENT_TYPE" == "use
     "COLLECTOR" "Heralding, ELK, NSM & Tools" \
     "NEXTGEN" "NextGen (Glutton instead of Honeytrap)" \
     "LEGACY" "Standard Edition from previous release" 3>&1 1>&2 2>&3 3>&-)
+>>>>>>> origin/master
 fi
 
-# Let's ask for a secure msec password if installation type is iso
+# 如果安装类型为ISO, 则我们需要用户输入一个msec的密码
 if [ "$myMOON_DEPLOYMENT_TYPE" == "iso" ];
   then
     myCONF_MOON_USER="msec"
@@ -357,23 +383,23 @@ if [ "$myMOON_DEPLOYMENT_TYPE" == "iso" ];
         while [ "$myPASS1" == "pass1"  ] || [ "$myPASS1" == "" ]
           do
             myPASS1=$(dialog --insecure --backtitle "$myBACKTITLE" \
-                             --title "[ Enter password for console user (msec) ]" \
-                             --passwordbox "\nPassword" 9 60 3>&1 1>&2 2>&3 3>&-)
+                             --title "[ 请输入控制台用户 msec 的密码]" \
+                             --passwordbox "\n密码" 9 60 3>&1 1>&2 2>&3 3>&-)
           done
             myPASS2=$(dialog --insecure --backtitle "$myBACKTITLE" \
-                             --title "[ Repeat password for console user (msec) ]" \
-                             --passwordbox "\nPassword" 9 60 3>&1 1>&2 2>&3 3>&-)
+                             --title "[ 请再输入一次控制台用户 msec 的密码 ]" \
+                             --passwordbox "\n密码" 9 60 3>&1 1>&2 2>&3 3>&-)
         if [ "$myPASS1" != "$myPASS2" ];
           then
-            dialog --backtitle "$myBACKTITLE" --title "[ Passwords do not match. ]" \
-                   --msgbox "\nPlease re-enter your password." 7 60
+            dialog --backtitle "$myBACKTITLE" --title "[ 您输入的密码不匹配. ]" \
+                   --msgbox "\n请重新输入控制台用户 msec 的密码." 7 60
             myPASS1="pass1"
             myPASS2="pass2"
         fi
         mySECURE=$(printf "%s" "$myPASS1" | cracklib-check | grep -c "OK")
         if [ "$mySECURE" == "0" ] && [ "$myPASS1" == "$myPASS2" ];
           then
-            dialog --backtitle "$myBACKTITLE" --title "[ Password is not secure ]" --defaultno --yesno "\nKeep insecure password?" 7 50
+            dialog --backtitle "$myBACKTITLE" --title "[ 您输入的密码不安全 ]" --defaultno --yesno "\n继续使用不安全的密码?" 7 50
             myOK=$?
             if [ "$myOK" == "1" ];
               then
@@ -385,9 +411,9 @@ if [ "$myMOON_DEPLOYMENT_TYPE" == "iso" ];
     printf "%s" "$myCONF_MOON_USER:$myPASS1" | chpasswd
 fi
 
-# Let's ask for a web user credentials if deployment type is iso or user
-# In case of auto, credentials are created from config values
-# Skip this step entirely if SENSOR flavor
+# 在 ISO 安装模式下,我们则需要用户输入一个用于web用户的登陆户凭证
+# 如果是 auto 安装模式, 这个web用户的登陆凭证将从配置创建
+# 如果安装为 传感器 则跳过这个凭证
 if [ "$myMOON_DEPLOYMENT_TYPE" == "iso" ] || [ "$myMOON_DEPLOYMENT_TYPE" == "user" ];
   then
     myOK="1"
@@ -397,9 +423,9 @@ if [ "$myMOON_DEPLOYMENT_TYPE" == "iso" ] || [ "$myMOON_DEPLOYMENT_TYPE" == "use
     mySECURE="0"
     while [ 1 != 2 ]
       do
-        myCONF_WEB_USER=$(dialog --backtitle "$myBACKTITLE" --title "[ Enter your web user name ]" --inputbox "\nUsername (msec not allowed)" 9 50 3>&1 1>&2 2>&3 3>&-)
+        myCONF_WEB_USER=$(dialog --backtitle "$myBACKTITLE" --title "[ 请输入用于 web 的用户名 ]" --inputbox "\n用户名 (不允许使用 msec)" 9 50 3>&1 1>&2 2>&3 3>&-)
         myCONF_WEB_USER=$(echo $myCONF_WEB_USER | tr -cd "[:alnum:]_.-")
-        dialog --backtitle "$myBACKTITLE" --title "[ Your username is ]" --yesno "\n$myCONF_WEB_USER" 7 50
+        dialog --backtitle "$myBACKTITLE" --title "[ 确认这个用户名 ]" --yesno "\n$myCONF_WEB_USER" 7 50
         myOK=$?
         if [ "$myOK" = "0" ] && [ "$myCONF_WEB_USER" != "msec" ] && [ "$myCONF_WEB_USER" != "" ];
           then
@@ -411,23 +437,23 @@ if [ "$myMOON_DEPLOYMENT_TYPE" == "iso" ] || [ "$myMOON_DEPLOYMENT_TYPE" == "use
         while [ "$myCONF_WEB_PW" == "pass1"  ] || [ "$myCONF_WEB_PW" == "" ]
           do
             myCONF_WEB_PW=$(dialog --insecure --backtitle "$myBACKTITLE" \
-                             --title "[ Enter password for your web user ]" \
-                             --passwordbox "\nPassword" 9 60 3>&1 1>&2 2>&3 3>&-)
+                             --title "[ 请输入您的 web 用户密码 ]" \
+                             --passwordbox "\n密码" 9 60 3>&1 1>&2 2>&3 3>&-)
           done
         myCONF_WEB_PW2=$(dialog --insecure --backtitle "$myBACKTITLE" \
-                         --title "[ Repeat password for your web user ]" \
-                         --passwordbox "\nPassword" 9 60 3>&1 1>&2 2>&3 3>&-)
+                         --title "[ 请再输入一次您的 web 用户密码 ]" \
+                         --passwordbox "\n密码" 9 60 3>&1 1>&2 2>&3 3>&-)
         if [ "$myCONF_WEB_PW" != "$myCONF_WEB_PW2" ];
           then
-            dialog --backtitle "$myBACKTITLE" --title "[ Passwords do not match. ]" \
-                   --msgbox "\nPlease re-enter your password." 7 60
+            dialog --backtitle "$myBACKTITLE" --title "[ 密码不匹配. ]" \
+                   --msgbox "\n请重新输入您的 web 用户密码." 7 60
             myCONF_WEB_PW="pass1"
             myCONF_WEB_PW2="pass2"
         fi
         mySECURE=$(printf "%s" "$myCONF_WEB_PW" | cracklib-check | grep -c "OK")
         if [ "$mySECURE" == "0" ] && [ "$myCONF_WEB_PW" == "$myCONF_WEB_PW2" ];
           then
-            dialog --backtitle "$myBACKTITLE" --title "[ Password is not secure ]" --defaultno --yesno "\nKeep insecure password?" 7 50
+            dialog --backtitle "$myBACKTITLE" --title "[ 密码不安全 ]" --defaultno --yesno "\n您确定使用这个不安全的密码?" 7 50
             myOK=$?
             if [ "$myOK" == "1" ];
               then
@@ -437,25 +463,25 @@ if [ "$myMOON_DEPLOYMENT_TYPE" == "iso" ] || [ "$myMOON_DEPLOYMENT_TYPE" == "use
         fi
       done
 fi
-# If flavor is SENSOR do not write credentials
+# 如果只是安装的风格是传感器, 则不产生 Web凭证
 if ! [ "$myCONF_MOON_FLAVOR" == "SENSOR" ];
   then
     mkdir -p /data/nginx/conf 2>&1
-    htpasswd -b -c /data/nginx/conf/nginxpasswd "$myCONF_WEB_USER" "$myCONF_WEB_PW" 2>&1 | dialog --title "[ Setting up user and password ]" $myPROGRESSBOXCONF;
+    htpasswd -b -c /data/nginx/conf/nginxpasswd "$myCONF_WEB_USER" "$myCONF_WEB_PW" 2>&1 | dialog --title "[ 设置用户名和密码 ]" $myPROGRESSBOXCONF;
 fi
 
 
-########################
-# Installation section #
-########################
+############
+# 安装部分 #
+############
 
-# Put cursor in invisible mode
+# 将光标隐藏
 tput civis
 
-# Let's generate a SSL self-signed certificate without interaction (browsers will see it invalid anyway)
+# 生成一个SSL证书, 但这种方式下, 浏览器无论如何都会认为它无效
 if ! [ "$myCONF_MOON_FLAVOR" == "SENSOR" ];
 then
-mkdir -p /data/nginx/cert 2>&1 | dialog --title "[ Generating a self-signed-certificate for NGINX ]" $myPROGRESSBOXCONF;
+mkdir -p /data/nginx/cert 2>&1 | dialog --title "[ 为 NGINX 生成一个自签名证书 ]" $myPROGRESSBOXCONF;
 openssl req \
         -nodes \
         -x509 \
@@ -464,25 +490,25 @@ openssl req \
         -keyout "/data/nginx/cert/nginx.key" \
         -out "/data/nginx/cert/nginx.crt" \
         -days 3650 \
-        -subj '/C=AU/ST=Some-State/O=Internet Widgits Pty Ltd' 2>&1 | dialog --title "[ Generating a self-signed-certificate for NGINX ]" $myPROGRESSBOXCONF;
+        -subj '/C=AU/ST=Some-State/O=Internet Widgits Pty Ltd' 2>&1 | dialog --title "[ 为 NGINX 生成一个自签名证书 ]" $myPROGRESSBOXCONF;
 fi
 
-# Let's setup the ntp server
+# 设置 ntp 服务器
 if [ "$myCONF_NTP_USE" == "0" ];
   then
-    cp $myCONF_NTP_CONF_FILE /etc/ntp.conf 2>&1 | dialog --title "[ Setting up the ntp server ]" $myPROGRESSBOXCONF
+    cp $myCONF_NTP_CONF_FILE /etc/ntp.conf 2>&1 | dialog --title "[ 设置 ntp 时间服务器 ]" $myPROGRESSBOXCONF
 fi
 
-# Let's setup 802.1x networking
+# 设置 802.1x 网络
 myNETWORK_INTERFACES="
 wpa-driver wired
 wpa-conf /etc/wpa_supplicant/wired8021x.conf
 
-### Example wireless config for 802.1x
-### This configuration was tested with the IntelNUC series
-### If problems occur you can try and change wpa-driver to \"iwlwifi\"
-### Do not forget to enter a ssid in /etc/wpa_supplicant/wireless8021x.conf
-### The Intel NUC uses wlpXsY notation instead of wlanX
+### 无线网络 802.1x 配置示例
+### 此配置通过 IntelNUC 系列测试
+### 如果出现问题, 您可以尝试将 wpa 驱动程序更改为: \"iwlwifi\"
+### 不要忘了在 /etc/wpa_supplicant/wireless8021x.conf 输入对应的 ssid
+### 在Intel NUC 中,使用 wlpXsY 表示无线网络,而不是 wlanX
 #
 #auto wlp2s0
 #iface wlp2s0 inet dhcp
@@ -506,30 +532,30 @@ ctrl_interface_group=root
 eapol_version=1
 ap_scan=1
 network={
-  ssid="<your_ssid_here_without_brackets>"
+  ssid=\"<请在这里输入 无线网络名称(ssid) 不带括号>\"
   key_mgmt=WPA-EAP
   pairwise=CCMP
   group=CCMP
   eap=TLS
-  identity="host/$myCONF_PFX_HOST_ID"
-  private_key="/etc/wpa_supplicant/8021x.pfx"
+  identity=\"host/$myCONF_PFX_HOST_ID\"
+  private_key=\"/etc/wpa_supplicant/8021x.pfx\"
   private_key_passwd="$myCONF_PFX_PW"
 }
 "
 if [ "myCONF_PFX_USE" == "0" ];
   then
-    cp $myCONF_PFX_FILE /etc/wpa_supplicant/ 2>&1 | dialog --title "[ Setting 802.1x networking ]" $myPROGRESSBOXCONF
-    echo "$myNETWORK_INTERFACES" 2>&1 | tee -a /etc/network/interfaces | dialog --title "[ Setting 802.1x networking ]" $myPROGRESSBOXCONF
+    cp $myCONF_PFX_FILE /etc/wpa_supplicant/ 2>&1 | dialog --title "[ 设置 802.1x 网络 ]" $myPROGRESSBOXCONF
+    echo "$myNETWORK_INTERFACES" 2>&1 | tee -a /etc/network/interfaces | dialog --title "[ 设置 802.1x 网络 ]" $myPROGRESSBOXCONF
 
-    echo "$myNETWORK_WIRED8021x" 2>&1 | tee /etc/wpa_supplicant/wired8021x.conf | dialog --title "[ Setting 802.1x networking ]" $myPROGRESSBOXCONF
+    echo "$myNETWORK_WIRED8021x" 2>&1 | tee /etc/wpa_supplicant/wired8021x.conf | dialog --title "[ 设置 802.1x 网络 ]" $myPROGRESSBOXCONF
 
-    echo "$myNETWORK_WLAN8021x" 2>&1 | tee /etc/wpa_supplicant/wireless8021x.conf | dialog --title "[ Setting 802.1x networking ]" $myPROGRESSBOXCONF
+    echo "$myNETWORK_WLAN8021x" 2>&1 | tee /etc/wpa_supplicant/wireless8021x.conf | dialog --title "[ 设置 802.1x 网络 ]" $myPROGRESSBOXCONF
 fi
 
-# Let's provide a wireless example config ...
+# 我们提供一个无限配置示例 ...
 myNETWORK_WLANEXAMPLE="
-### Example static ip config
-### Replace <eth0> with the name of your physical interface name
+### 静态 IP 配置示例
+### 替换 <eth0> 为您实际的物理网络接口的名称
 #
 #auto eth0
 #iface eth0 inet static
@@ -540,26 +566,48 @@ myNETWORK_WLANEXAMPLE="
 # gateway 192.168.1.1
 # dns-nameservers 192.168.1.1
 
-### Example wireless config without 802.1x
-### This configuration was tested with the IntelNUC series
-### If problems occur you can try and change wpa-driver to "iwlwifi"
+### 无线网络配置示例, 不含 802.1x
+### 此配置通过 IntelNUC 系列测试
+### 如果出现问题, 您可以尝试将 wpa 驱动程序更改为: \"iwlwifi\"
 #
 #auto wlan0
 #iface wlan0 inet dhcp
 #   wpa-driver wext
-#   wpa-ssid <your_ssid_here_without_brackets>
+#   wpa-ssid <请在这里输入 无线网络名称(ssid) 不带括号>
 #   wpa-ap-scan 1
 #   wpa-proto RSN
 #   wpa-pairwise CCMP
 #   wpa-group CCMP
 #   wpa-key-mgmt WPA-PSK
-#   wpa-psk \"<your_password_here_without_brackets>\"
+#   wpa-psk \"<请在这里输入 无线网络密码 不带括号>\"
 "
-echo "$myNETWORK_WLANEXAMPLE" 2>&1 | tee -a /etc/network/interfaces | dialog --title "[ Provide WLAN example config ]" $myPROGRESSBOXCONF
+echo "$myNETWORK_WLANEXAMPLE" 2>&1 | tee -a /etc/network/interfaces | dialog --title "[ WLAN 配置示例 ]" $myPROGRESSBOXCONF
 
-# Let's modify the sources list
+# 修改 sources.list
 sed -i '/cdrom/d' /etc/apt/sources.list
 
+<<<<<<< HEAD
+# 确保 SSH roaming 已经关闭(CVE-2016-0777, CVE-2016-0778)
+echo "UseRoaming no" 2>&1 | tee -a /etc/ssh/ssh_config | dialog --title "[ SSH Roaming 已经关闭 ]" $myPROGRESSBOXCONF
+
+# 安装 ctop, elasticdump, moon, yq
+npm install https://gitee.com/stackw0rm/elasticsearch-dump.git -g 2>&1 | dialog --title "[ 安装 elasticsearch-dump ]" $myPROGRESSBOXCONF
+pip install --upgrade pip 2>&1 | dialog --title "[ 安装 pip ]" $myPROGRESSBOXCONF
+hash -r 2>&1 | dialog --title "[ 安装 pip ]" $myPROGRESSBOXCONF
+pip install elasticsearch-curator yq 2>&1 | dialog --title "[ 安装 elasticsearch-curator, yq ]" $myPROGRESSBOXCONF
+git clone https://gitee.com/stackw0rm/moon.git -b v1.2 /opt/moon 2>&1 | dialog --title "[ 克隆 MoonStack ]" $myPROGRESSBOXCONF
+cp /opt/moon/iso/other/ctop-0.7.1-linux-amd64 -O /usr/bin/ctop 2>&1 | dialog --title "[ 安装 ctop ]" $myPROGRESSBOXCONF
+chmod +x /usr/bin/ctop 2>&1 | dialog --title "[ 安装 ctop ]" $myPROGRESSBOXCONF
+/opt/moon/iso/installer/set_mirrors.sh https://0at6ledb.mirror.aliyuncs.com 2>&1 | dialog --title "[ 设置 Aliyun Docker 镜像加速器 ]" $myPROGRESSBOXCONF
+systemctl daemon-reload 2>&1 | dialog --title "[ 重新载入 Daemon ]" $myPROGRESSBOXCONF
+systemctl restart  docker 2>&1 | dialog --title "[ 重启 Docker 服务 ]" $myPROGRESSBOXCONF
+
+# 创建 MoonStack 用户及组
+addgroup --gid 2000 moon 2>&1 | dialog --title "[ 创建 moon 用户组 ]" $myPROGRESSBOXCONF
+adduser --system --no-create-home --uid 2000 --disabled-password --disabled-login --gid 2000 moon 2>&1 | dialog --title "[ 创建 moon 用户 ]" $myPROGRESSBOXCONF
+
+# 设置 hostname
+=======
 # Let's make sure SSH roaming is turned off (CVE-2016-0777, CVE-2016-0778)
 echo "UseRoaming no" 2>&1 | tee -a /etc/ssh/ssh_config | dialog --title "[ Turn SSH roaming off ]" $myPROGRESSBOXCONF
 
@@ -580,50 +628,62 @@ addgroup --gid 2000 moon 2>&1 | dialog --title "[ Adding MOON user ]" $myPROGRES
 adduser --system --no-create-home --uid 2000 --disabled-password --disabled-login --gid 2000 moon 2>&1 | dialog --title "[ Adding MOON user ]" $myPROGRESSBOXCONF
 
 # Let's set the hostname
+>>>>>>> origin/master
 a=$(fuRANDOMWORD /opt/moon/host/usr/share/dict/a.txt)
 n=$(fuRANDOMWORD /opt/moon/host/usr/share/dict/n.txt)
 myHOST=$a$n
-hostnamectl set-hostname $myHOST 2>&1 | dialog --title "[ Setting new hostname ]" $myPROGRESSBOXCONF
-sed -i 's#127.0.1.1.*#127.0.1.1\t'"$myHOST"'#g' /etc/hosts 2>&1 | dialog --title "[ Setting new hostname ]" $myPROGRESSBOXCONF
+hostnamectl set-hostname $myHOST 2>&1 | dialog --title "[ 设置新的 hostname ]" $myPROGRESSBOXCONF
+sed -i 's#127.0.1.1.*#127.0.1.1\t'"$myHOST"'#g' /etc/hosts 2>&1 | dialog --title "[ 设置新的hostname ]" $myPROGRESSBOXCONF
 if [ -f "/etc/cloud/cloud.cfg" ];
   then
     sed -i 's/preserve_hostname: false/preserve_hostname: true/' /etc/cloud/cloud.cfg
 fi
 
+<<<<<<< HEAD
+# 修改 cockpit.socket, sshd_config
+sed -i 's#ListenStream=9090#ListenStream=64294#' /lib/systemd/system/cockpit.socket 2>&1 | dialog --title "[ Cockpit 端口修改为 tcp/64294 ]" $myPROGRESSBOXCONF
+sed -i '/^port/Id' /etc/ssh/sshd_config 2>&1 | dialog --title "[ SSH 端口修改为 tcp/64295 ]" $myPROGRESSBOXCONF
+echo "Port 64295" >> /etc/ssh/sshd_config 2>&1 | dialog --title "[ SSH 端口修改为 tcp/64295 ]" $myPROGRESSBOXCONF
+=======
 # Let's patch cockpit.socket, sshd_config
 sed -i 's#ListenStream=9090#ListenStream=64294#' /lib/systemd/system/cockpit.socket 2>&1 | dialog --title "[ Cockpit listen on tcp/64294 ]" $myPROGRESSBOXCONF
 sed -i '/^port/Id' /etc/ssh/sshd_config && echo "Port 64295" >> /etc/ssh/sshd_config 2>&1 | dialog --title "[ SSH listen on tcp/64295 ]" $myPROGRESSBOXCONF
 echo "Port 64295" >> /etc/ssh/sshd_config 2>&1 | dialog --title "[ SSH listen on tcp/64295 ]" $myPROGRESSBOXCONF
+>>>>>>> origin/master
 
-# Let's make sure only myCONF_MOON_FLAVOR images will be downloaded and started
+# 确保只有一个配置被启动
 case $myCONF_MOON_FLAVOR in
   STANDARD)
-    echo "### Preparing STANDARD flavor installation."
+    echo "### 即将执行 STANDARD (标准模式)安装."
     ln -s /opt/moon/etc/compose/standard.yml $myMOONCOMPOSE 2>&1>/dev/null
   ;;
   SENSOR)
-    echo "### Preparing SENSOR flavor installation."
+    echo "### 即将执行 SENSOR (传感器)安装."
     ln -s /opt/moon/etc/compose/sensor.yml $myMOONCOMPOSE 2>&1>/dev/null
   ;;
   INDUSTRIAL)
-    echo "### Preparing INDUSTRIAL flavor installation."
+    echo "### 即将执行 INDUSTRIAL (工控场景)安装."
     ln -s /opt/moon/etc/compose/industrial.yml $myMOONCOMPOSE 2>&1>/dev/null
   ;;
   COLLECTOR)
-    echo "### Preparing COLLECTOR flavor installation."
+    echo "### 即将执行 COLLECTOR (采集场景)安装."
     ln -s /opt/moon/etc/compose/collector.yml $myMOONCOMPOSE 2>&1>/dev/null
   ;;
   NEXTGEN)
+<<<<<<< HEAD
+    echo "### 即将执行 NEXTGEN (下一代蜜网)安装."
+=======
     echo "### Preparing NEXTGEN flavor installation."
+>>>>>>> origin/master
     ln -s /opt/moon/etc/compose/nextgen.yml $myMOONCOMPOSE 2>&1>/dev/null
   ;;
   LEGACY)
-    echo "### Preparing LEGACY flavor installation."
+    echo "### 即将执行 LEGACY (标准版(旧)安装."
     ln -s /opt/moon/etc/compose/legacy.yml $myMOONCOMPOSE 2>&1>/dev/null
   ;;
 esac
 
-# Let's load docker images in parallel
+# 加载 docker 镜像
 function fuPULLIMAGES {
 for name in $(cat $myMOONCOMPOSE | grep -v '#' | grep image | cut -d'"' -f2 | uniq)
   do
@@ -631,19 +691,19 @@ for name in $(cat $myMOONCOMPOSE | grep -v '#' | grep image | cut -d'"' -f2 | un
 done
 wait
 }
-fuPULLIMAGES 2>&1 | dialog --title "[ Pulling docker images, please be patient ]" $myPROGRESSBOXCONF
+fuPULLIMAGES 2>&1 | dialog --title "[ 正在获取Docker镜像, 请耐心等待 ]" $myPROGRESSBOXCONF
 
-# Let's add the daily update check with a weekly clean interval
+# 设置检查更新 为每周
 myUPDATECHECK="APT::Periodic::Update-Package-Lists \"1\";
 APT::Periodic::Download-Upgradeable-Packages \"0\";
 APT::Periodic::AutocleanInterval \"7\";
 "
-echo "$myUPDATECHECK" 2>&1 | tee /etc/apt/apt.conf.d/10periodic | dialog --title "[ Modifying update checks ]" $myPROGRESSBOXCONF
+echo "$myUPDATECHECK" 2>&1 | tee /etc/apt/apt.conf.d/10periodic | dialog --title "[ 修改更新检查 ]" $myPROGRESSBOXCONF
 
-# Let's make sure to reboot the system after a kernel panic
+# 确保内核崩溃后系统可以重新启动
 mySYSCTLCONF="
-# Reboot after kernel panic, check via /proc/sys/kernel/panic[_on_oops]
-# Set required map count for ELK
+# 通过设置 /proc/sys/kernel/panic[_on_oops], 确保内核崩溃后系统重新启动
+# 设置 ELK 所需的 map_count
 kernel.panic = 1
 kernel.panic_on_oops = 1
 vm.max_map_count = 262144
@@ -651,9 +711,9 @@ net.ipv6.conf.all.disable_ipv6 = 1
 net.ipv6.conf.default.disable_ipv6 = 1
 net.ipv6.conf.lo.disable_ipv6 = 1
 "
-echo "$mySYSCTLCONF" 2>&1 | tee -a /etc/sysctl.conf | dialog --title "[ Tweak Sysctl ]" $myPROGRESSBOXCONF
+echo "$mySYSCTLCONF" 2>&1 | tee -a /etc/sysctl.conf | dialog --title "[ 调整 Sysctl ]" $myPROGRESSBOXCONF
 
-# Let's setup fail2ban config
+# 设置 fail2ban
 myFAIL2BANCONF="[DEFAULT]
 ignore-ip = 127.0.0.1/8
 bantime = 3600
@@ -678,36 +738,41 @@ port    = 64295
 filter  = sshd
 logpath = /var/log/auth.log
 "
-echo "$myFAIL2BANCONF" 2>&1 | tee /etc/fail2ban/jail.d/moon.conf | dialog --title "[ Setup fail2ban config ]" $myPROGRESSBOXCONF
+echo "$myFAIL2BANCONF" 2>&1 | tee /etc/fail2ban/jail.d/moon.conf | dialog --title "[ 设置 fail2ban ]" $myPROGRESSBOXCONF
 
-# Fix systemd error https://github.com/systemd/systemd/issues/3374
+# 修改 systemd 错误 https://github.com/systemd/systemd/issues/3374
 mySYSTEMDFIX="[Link]
 NamePolicy=kernel database onboard slot path
 MACAddressPolicy=none
 "
-echo "$mySYSTEMDFIX" 2>&1 | tee /etc/systemd/network/99-default.link | dialog --title "[ systemd fix ]" $myPROGRESSBOXCONF
+echo "$mySYSTEMDFIX" 2>&1 | tee /etc/systemd/network/99-default.link | dialog --title "[ 修改 systemd 错误 ]" $myPROGRESSBOXCONF
 
-# Let's add some cronjobs
+# 添加一些 cron 作业
 myCRONJOBS="
-# Check if updated images are available and download them
+# 检查到新的 docker 镜像后下载
 27 1 * * *      root    docker-compose -f /opt/moon/etc/moon.yml pull
 
-# Delete elasticsearch logstash indices older than 90 days
+# 90天自动清空 elasticsearch logstash 文件夹
 27 4 * * *      root    curator --config /opt/moon/etc/curator/curator.yml /opt/moon/etc/curator/actions.yml
 
-# Uploaded binaries are not supposed to be downloaded
+# 上传的二进制文件不能下载
 */1 * * * *     root    mv --backup=numbered /data/dionaea/roots/ftp/* /data/dionaea/binaries/
 
+<<<<<<< HEAD
+# 每天重新启动
+=======
 # Daily reboot
+>>>>>>> origin/master
 27 3 * * *      root    systemctl stop moon && docker stop \$(docker ps -aq) || docker rm \$(docker ps -aq) || reboot
 
-# Check for updated packages every sunday, upgrade and reboot
+# 每周日检查升级的软件包, 自动下载并重新启动
 27 16 * * 0     root    apt-get autoclean -y && apt-get autoremove -y && apt-get update -y && apt-get upgrade -y && sleep 10 && reboot
 "
-echo "$myCRONJOBS" 2>&1 | tee -a /etc/crontab | dialog --title "[ Adding cronjobs ]" $myPROGRESSBOXCONF
+echo "$myCRONJOBS" 2>&1 | tee -a /etc/crontab | dialog --title "[ 添加 cron 任务 ]" $myPROGRESSBOXCONF
 
-# Let's create some files and folders
-mkdir -p /data/ciscoasa/log \
+# 创建一些文件和文件夹
+mkdir -p /data/adbhoney/downloads /data/adbhoney/log \
+         /data/ciscoasa/log \
 	 /data/conpot/log \
          /data/cowrie/log/tty/ /data/cowrie/downloads/ /data/cowrie/keys/ /data/cowrie/misc/ \
          /data/dionaea/log /data/dionaea/bistreams /data/dionaea/binaries /data/dionaea/rtp /data/dionaea/roots/ftp /data/dionaea/roots/tftp /data/dionaea/roots/www /data/dionaea/roots/upnp \
@@ -726,33 +791,33 @@ mkdir -p /data/ciscoasa/log \
          /data/spiderfoot \
          /data/suricata/log /home/msec/.ssh/ \
 	 /data/tanner/log /data/tanner/files \
-         /data/p0f/log 2>&1 | dialog --title "[ Creating some files and folders ]" $myPROGRESSBOXCONF
-touch /data/spiderfoot/spiderfoot.db 2>&1 | dialog --title "[ Creating some files and folders ]" $myPROGRESSBOXCONF
-touch /data/nginx/log/error.log  2>&1 | dialog --title "[ Creating some files and folders ]" $myPROGRESSBOXCONF
+         /data/p0f/log 2>&1 | dialog --title "[ 创建一些文件和文件夹 ]" $myPROGRESSBOXCONF
+touch /data/spiderfoot/spiderfoot.db 2>&1 | dialog --title "[ 创建一些文件和文件夹 ]" $myPROGRESSBOXCONF
+touch /data/nginx/log/error.log  2>&1 | dialog --title "[ 创建一些文件和文件夹 ]" $myPROGRESSBOXCONF
 
-# Let's copy some files
-tar xvfz /opt/moon/etc/objects/elkbase.tgz -C / 2>&1 | dialog --title "[ Extracting elkbase.tgz ]" $myPROGRESSBOXCONF
-cp /opt/moon/host/etc/systemd/* /etc/systemd/system/ 2>&1 | dialog --title "[ Copy configs ]" $myPROGRESSBOXCONF
-cp /opt/moon/host/etc/issue /etc/ 2>&1 | dialog --title "[ Copy configs ]" $myPROGRESSBOXCONF
-systemctl enable moon 2>&1 | dialog --title "[ Enabling service for moon ]" $myPROGRESSBOXCONF
+# 拷贝一些文件
+tar xvfz /opt/moon/etc/objects/elkbase.tgz -C / 2>&1 | dialog --title "[ 解压缩 elkbase.tgz ]" $myPROGRESSBOXCONF
+cp /opt/moon/host/etc/systemd/* /etc/systemd/system/ 2>&1 | dialog --title "[ 复制配置文件 ]" $myPROGRESSBOXCONF
+cp /opt/moon/host/etc/issue /etc/ 2>&1 | dialog --title "[ 复制配置文件 ]" $myPROGRESSBOXCONF
+systemctl enable moon 2>&1 | dialog --title "[ 开启 moon 服务 ]" $myPROGRESSBOXCONF
 
-# Let's take care of some files and permissions
-chmod 760 -R /data 2>&1 | dialog --title "[ Set permissions and ownerships ]" $myPROGRESSBOXCONF
-chown moon:moon -R /data 2>&1 | dialog --title "[ Set permissions and ownerships ]" $myPROGRESSBOXCONF
-chmod 644 -R /data/nginx/conf 2>&1 | dialog --title "[ Set permissions and ownerships ]" $myPROGRESSBOXCONF
-chmod 644 -R /data/nginx/cert 2>&1 | dialog --title "[ Set permissions and ownerships ]" $myPROGRESSBOXCONF
+# 处理一些文件和权限
+chmod 760 -R /data 2>&1 | dialog --title "[ 设置权限和所属权限 ]" $myPROGRESSBOXCONF
+chown moon:moon -R /data 2>&1 | dialog --title "[ 设置权限和所属权限 ]" $myPROGRESSBOXCONF
+chmod 644 -R /data/nginx/conf 2>&1 | dialog --title "[ 设置权限和所属权限 ]" $myPROGRESSBOXCONF
+chmod 644 -R /data/nginx/cert 2>&1 | dialog --title "[ 设置权限和所属权限 ]" $myPROGRESSBOXCONF
 
-# Let's replace "quiet splash" options, set a console font for more screen canvas and update grub
+# 替换 "quiet splash" 选项, 设置更多的屏幕风格, 并写入grub
 sed -i 's#GRUB_CMDLINE_LINUX_DEFAULT="quiet splash"#GRUB_CMDLINE_LINUX_DEFAULT="consoleblank=0"#' /etc/default/grub 2>&1>/dev/null
 sed -i 's#GRUB_CMDLINE_LINUX=""#GRUB_CMDLINE_LINUX="cgroup_enable=memory swapaccount=1"#' /etc/default/grub 2>&1>/dev/null
-update-grub 2>&1 | dialog --title "[ Update grub ]" $myPROGRESSBOXCONF
+update-grub 2>&1 | dialog --title "[ 更新 grub ]" $myPROGRESSBOXCONF
 cp /usr/share/consolefonts/Uni2-Terminus12x6.psf.gz /etc/console-setup/
 gunzip /etc/console-setup/Uni2-Terminus12x6.psf.gz
 sed -i 's#FONTFACE=".*#FONTFACE="Terminus"#' /etc/default/console-setup
 sed -i 's#FONTSIZE=".*#FONTSIZE="12x6"#' /etc/default/console-setup
-update-initramfs -u 2>&1 | dialog --title "[ Update initramfs ]" $myPROGRESSBOXCONF
+update-initramfs -u 2>&1 | dialog --title "[ 更新 initramfs ]" $myPROGRESSBOXCONF
 
-# Let's enable a color prompt and add /opt/moon/bin to path
+# 启用颜色提示, 并将 /opt/moon/bin 写入用户变量
 myROOTPROMPT='PS1="\[\033[38;5;8m\][\[$(tput sgr0)\]\[\033[38;5;1m\]\u\[$(tput sgr0)\]\[\033[38;5;6m\]@\[$(tput sgr0)\]\[\033[38;5;4m\]\h\[$(tput sgr0)\]\[\033[38;5;6m\]:\[$(tput sgr0)\]\[\033[38;5;5m\]\w\[$(tput sgr0)\]\[\033[38;5;8m\]]\[$(tput sgr0)\]\[\033[38;5;1m\]\\$\[$(tput sgr0)\]\[\033[38;5;15m\] \[$(tput sgr0)\]"'
 myUSERPROMPT='PS1="\[\033[38;5;8m\][\[$(tput sgr0)\]\[\033[38;5;2m\]\u\[$(tput sgr0)\]\[\033[38;5;6m\]@\[$(tput sgr0)\]\[\033[38;5;4m\]\h\[$(tput sgr0)\]\[\033[38;5;6m\]:\[$(tput sgr0)\]\[\033[38;5;5m\]\w\[$(tput sgr0)\]\[\033[38;5;8m\]]\[$(tput sgr0)\]\[\033[38;5;2m\]\\$\[$(tput sgr0)\]\[\033[38;5;15m\] \[$(tput sgr0)\]"'
 tee -a /root/.bashrc 2>&1>/dev/null <<EOF
@@ -760,27 +825,41 @@ $myROOTPROMPT
 PATH="$PATH:/opt/moon/bin"
 EOF
 for i in $(ls -d /home/*/)
+<<<<<<< HEAD
+  do
+tee -a $i.bashrc 2>&1>/dev/null <<EOF
+=======
    do
  tee -a $i.bashrc 2>&1>/dev/null <<EOF
+>>>>>>> origin/master
 $myUSERPROMPT
 PATH="$PATH:/opt/moon/bin"
 EOF
 done
 
-# Let's create ews.ip before reboot and prevent race condition for first start
+# 在重新启动之前设置 ews.ip
 /opt/moon/bin/updateip.sh 2>&1>/dev/null
 
-# Let's clean up apt
-apt-get autoclean -y 2>&1 | dialog --title "[ Cleaning up ]" $myPROGRESSBOXCONF
-apt-get autoremove -y 2>&1 | dialog --title "[ Cleaning up ]" $myPROGRESSBOXCONF
+# 清理 apt
+apt-get autoclean -y 2>&1 | dialog --title "[ apt清理 ]" $myPROGRESSBOXCONF
+apt-get autoremove -y 2>&1 | dialog --title "[ apt自动卸载过期软件包 ]" $myPROGRESSBOXCONF
 
-# Final steps
+# 最后步骤
 cp /opt/moon/host/etc/rc.local /etc/rc.local 2>&1>/dev/null && \
 rm -rf /root/installer 2>&1>/dev/null && \
 if [ "$myMOON_DEPLOYMENT_TYPE" == "auto" ];
+<<<<<<< HEAD
+  then
+    echo "完成. 请重启."
+  else
+    dialog --no-ok --no-cancel --backtitle "$myBACKTITLE" --title "[ 感谢您的耐心等待, 即将重新启动. ]" --pause "" 6 80 2 && \
+    reboot
+fi
+=======
    then
      echo "Done. Please reboot."
    else
      dialog --no-ok --no-cancel --backtitle "$myBACKTITLE" --title "[ Thanks for your patience. Now rebooting. ]" --pause "" 6 80 2 && \
      reboot
  fi
+>>>>>>> origin/master

@@ -1,4 +1,4 @@
-# makeiso configuration file
+# makeiso 配置文件
 myCONF_PROXY_USE='0'
 myCONF_PROXY_IP='1.2.3.4'
 myCONF_PROXY_PORT='3128'
