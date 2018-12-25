@@ -145,18 +145,30 @@ fi
 echo
 }
 
+<<<<<<< HEAD
 # 删除旧的镜像
+=======
+# Remove old images for specific tag
+>>>>>>> origin/master
 function fuREMOVEOLDIMAGES () {
 local myOLDTAG=$1
 local myOLDIMAGES=$(docker images | grep -c "$myOLDTAG")
 if [ "$myOLDIMAGES" -gt "0" ];
   then
+<<<<<<< HEAD
     echo "### 删除旧的Docker 镜像."
+=======
+    echo "### Removing old docker images."
+>>>>>>> origin/master
     docker rmi $(docker images | grep "$myOLDTAG" | awk '{print $3}')
 fi
 }
 
+<<<<<<< HEAD
 # 加载Docker镜像
+=======
+# Let's load docker images in parallel
+>>>>>>> origin/master
 function fuPULLIMAGES {
 local myMOONCOMPOSE="/opt/moon/etc/moon.yml"
 for name in $(cat $myMOONCOMPOSE | grep -v '#' | grep image | cut -d'"' -f2 | uniq)
@@ -168,18 +180,31 @@ echo
 }
 
 function fuUPDATER () {
+<<<<<<< HEAD
 local myPACKAGES="apache2-utils apparmor apt-transport-https aufs-tools bash-completion build-essential ca-certificates cgroupfs-mount cockpit cockpit-docker curl debconf-utils dialog dnsutils docker.io docker-compose dstat ethtool fail2ban genisoimage git glances grc html2text htop ifupdown iptables iw jq libcrack2 libltdl7 lm-sensors man mosh multitail net-tools npm ntp openssh-server openssl pass prips software-properties-common syslinux psmisc pv python-pip unattended-upgrades unzip vim wireless-tools wpasupplicant"
 echo "### 升级系统文件 ..."
+=======
+local myPACKAGES="apache2-utils apparmor apt-transport-https aufs-tools bash-completion build-essential ca-certificates cgroupfs-mount cockpit cockpit-docker curl debconf-utils  dialog dnsutils docker.io docker-compose dstat ethtool fail2ban genisoimage git glances grc html2text htop ifupdown iptables iw jq libcrack2 libltdl7 lm-sensors man mosh  multitail net-tools npm ntp openssh-server openssl pass prips software-properties-common syslinux psmisc pv python-pip unattended-upgrades unzip vim wireless-tools wpasupplicant"
+echo "### Now upgrading packages ..."
+>>>>>>> origin/master
 dpkg --configure -a
 apt-get -y autoclean
 apt-get -y autoremove
 apt-get update
 apt-get -y install $myPACKAGES
 
+<<<<<<< HEAD
 # 一些更新会给出提示交互,将以下设置覆盖.
 echo "docker.io docker.io/restart       boolean true" | debconf-set-selections -v
 echo "debconf debconf/frontend select noninteractive" | debconf-set-selections -v
 apt-get -y dist-upgrade -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" --force-yes
+=======
+# Some updates require interactive attention, and the following settings will override that.
+echo "docker.io docker.io/restart       boolean true" | debconf-set-selections -v
+echo "debconf debconf/frontend select noninteractive" | debconf-set-selections -v
+apt-get -y dist-upgrade -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" --force-yes
+
+>>>>>>> origin/master
 dpkg --configure -a
 npm install "https://gitee.com/stackw0rm/elasticsearch-dump.git" -g
 pip install --upgrade pip
@@ -235,9 +260,15 @@ echo "######$myBLUE 这可能需要一段时间,请耐心等待!$myWHITE"
 fuPULLIMAGES 2>&1>/dev/null
 
 fuREMOVEOLDIMAGES "v1.1"
+<<<<<<< HEAD
 echo "### 如果你修改了moon.yml,请再次检查是否已经添加它们."
 echo "### 我们将存储当前的版本在 /root/ 目录."
 echo "### 已完成,请重启."
+=======
+echo "### If you made changes to moon.yml please ensure to add them again."
+echo "### We stored the previous version as backup in /root/."
+echo "### Done, please reboot."
+>>>>>>> origin/master
 echo
 }
 

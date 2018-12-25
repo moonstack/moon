@@ -71,7 +71,11 @@ d-i user-setup/encrypt-home boolean false
 ### Country Mirror & Proxy Configuration
 ########################################
 d-i mirror/country string manual
+<<<<<<< HEAD
 d-i mirror/http/hostname string mirrors.aliyun.com
+=======
+d-i mirror/http/hostname string mirrors.ustc.edu.cn
+>>>>>>> origin/master
 d-i mirror/http/directory string /ubuntu
 d-i mirror/http/proxy string
 
