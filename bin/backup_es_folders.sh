@@ -26,16 +26,16 @@ myKIBANAINDEXPATH=$myELKPATH/nodes/0/indices/$myKIBANAINDEXNAME
 function fuCLEANUP {
   ### 启动 MoonStack
   systemctl start moon
-  echo "### 正在启动 MoonStack ..."
+  echo "### Starting MoonStack ..."
 }
 trap fuCLEANUP EXIT
 
 # 停止 MoonStack 解锁数据库
-echo "### 正在停止 MoonStack"
+echo "### Stoping MoonStack"
 systemctl stop moon
 sleep 2
 
 # 两种方式备份数据库
-echo "### 现在备份 ElasticSearch 文件夹 ..."
+echo "### Backup ElasticSearch files ..."
 tar cvfz "elkall_"$myDATE".tgz" $myELKPATH
 tar cvfz "elkbase_"$myDATE".tgz" $myKIBANAINDEXPATH
