@@ -573,7 +573,7 @@ pip install --upgrade pip 2>&1 | dialog --title "[ Installing pip ]" $myPROGRESS
 hash -r 2>&1 | dialog --title "[ Installing pip ]" $myPROGRESSBOXCONF
 pip install elasticsearch-curator yq 2>&1 | dialog --title "[ Installing elasticsearch-curator, yq ]" $myPROGRESSBOXCONF
 git clone https://gitee.com/stackw0rm/moon.git /opt/moon 2>&1 | dialog --title "[ Cloning MoonStack ]" $myPROGRESSBOXCONF
-cp /opt/moon/iso/other/ctop-0.7.1-linux-amd64 -O /usr/bin/ctop 2>&1 | dialog --title "[ Installing ctop ]" $myPROGRESSBOXCONF
+cp /opt/moon/iso/other/ctop-0.7.1-linux-amd64 /usr/bin/ctop 2>&1 | dialog --title "[ Installing ctop ]" $myPROGRESSBOXCONF
 chmod +x /usr/bin/ctop 2>&1 | dialog --title "[ Installing ctop ]" $myPROGRESSBOXCONF
 /opt/moon/iso/installer/set_mirrors.sh https://0at6ledb.mirror.aliyuncs.com 2>&1 | dialog --title "[ Set Docker Mirror For Aliyun ]" $myPROGRESSBOXCONF
 systemctl daemon-reload 2>&1 | dialog --title "[ Reload Daemon ]" $myPROGRESSBOXCONF

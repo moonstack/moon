@@ -10,7 +10,7 @@ if [ "$myEXTIP" = "" ];
 fi
 mySSHUSER=$(cat /etc/passwd | grep 1000 | cut -d ':' -f1)
 sed -i "s#IP:.*#IP: $myLOCALIP ($myEXTIP)[0m#" /etc/issue
-sed -i "s#SSH:.*#SSH: ssh -l tsec -p 64295 $myLOCALIP[0m#" /etc/issue
+sed -i "s#SSH:.*#SSH: ssh -l msec -p 64295 $myLOCALIP[0m#" /etc/issue
 sed -i "s#WEB:.*#WEB: https://$myLOCALIP:64297[0m#" /etc/issue
 sed -i "s#ADMIN:.*#ADMIN: https://$myLOCALIP:64294[0m#" /etc/issue
 tee /data/ews/conf/ews.ip << EOF
