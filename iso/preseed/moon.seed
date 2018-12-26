@@ -14,7 +14,7 @@ d-i localechooser/preferred-locale string en_US.UTF-8
 ### Keyboard Selection
 ######################
 #d-i console-setup/ask_detect boolean true
-#d-i keyboard-configuration/layoutcode string de
+d-i keyboard-configuration/layoutcode string us
 d-i console-setup/detected note
 
 #############################

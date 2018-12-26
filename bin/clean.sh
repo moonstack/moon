@@ -1,22 +1,22 @@
 #!/bin/bash
-# MoonStack Container Data Cleaner & Log Rotator
+#数据打包和压缩
 
-# Set colors
+# 设置显示颜色
 myRED="[0;31m"
 myGREEN="[0;32m"
 myWHITE="[0;0m"
 
-# Set persistence
+
 myPERSISTENCE=$1
 
-# Let's create a function to check if folder is empty
+# 检查文件夹是否为空
 fuEMPTY () {
   local myFOLDER=$1
 
 echo $(ls $myFOLDER | wc -l)
 }
 
-# Let's create a function to rotate and compress logs
+# 打包压缩日志
 fuLOGROTATE () {
   local mySTATUS="/opt/moon/etc/logrotate/status"
   local myCONF="/opt/moon/etc/logrotate/logrotate.conf"
@@ -37,13 +37,12 @@ fuLOGROTATE () {
   local myTANNERF="/data/tanner/files/"
   local myTANNERFTGZ="/data/tanner/files.tgz"
 
-# Ensure correct permissions and ownerships for logrotate to run without issues
+# logrotate 设置权限
 chmod 760 /data/ -R
 chown moon:moon /data -R
 chmod 644 /data/nginx/conf -R
 chmod 644 /data/nginx/cert -R
 
-# Run logrotate with force (-f) first, so the status file can be written and race conditions (with tar) be avoided
 logrotate -f -s $mySTATUS $myCONF
 
 # Compressing some folders first and rotate them later

@@ -1,18 +1,17 @@
 #!/bin/bash
-# Backup all ES relevant folders
-# Make sure ES is available
+#########################################
+#    The MoonStack Backup ES by feng    # 
+#########################################
+# 备份所有 ElasticSearch 相关的文件夹
+# 检测 ElasticSearch是否可用
 myES="http://127.0.0.1:64298/"
 myESSTATUS=$(curl -s -XGET ''$myES'_cluster/health' | jq '.' | grep -c green)
 if ! [ "$myESSTATUS" = "1" ]
   then
-<<<<<<< HEAD
-    echo "### Elasticsearch is not available, try starting via 'systemctl start moon'."
-=======
-    echo "### Elasticsearch is not available, try starting via 'systemctl start MoonStack'."
->>>>>>> origin/master
+    echo "### ElasticSearch 没有启动, 请使用 'systemctl start moon' 命令尝试启动."
     exit
   else
-    echo "### Elasticsearch is available, now continuing."
+    echo "### ElasticSearch 已启动, 现在继续."
     echo
 fi
 
@@ -23,20 +22,20 @@ myELKPATH="/data/elk/data"
 myKIBANAINDEXNAME=$(curl -s -XGET ''$myES'_cat/indices/' | grep -w ".kibana_1" | awk '{ print $4 }')
 myKIBANAINDEXPATH=$myELKPATH/nodes/0/indices/$myKIBANAINDEXNAME
 
-# Let's ensure normal operation on exit or if interrupted ...
+# 确保 ElasticSearch 是可用的,可以正常备份 ...
 function fuCLEANUP {
-  ### Start ELK
+  ### 启动 MoonStack
   systemctl start moon
-  echo "### Now starting MoonStack ..."
+  echo "### 正在启动 MoonStack ..."
 }
 trap fuCLEANUP EXIT
 
-# Stop MoonStack to lift db lock
-echo "### Now stopping MoonStack"
+# 停止 MoonStack 解锁数据库
+echo "### 正在停止 MoonStack"
 systemctl stop moon
 sleep 2
 
-# Backup DB in 2 flavors
-echo "### Now backing up Elasticsearch folders ..."
+# 两种方式备份数据库
+echo "### 现在备份 ElasticSearch 文件夹 ..."
 tar cvfz "elkall_"$myDATE".tgz" $myELKPATH
 tar cvfz "elkbase_"$myDATE".tgz" $myKIBANAINDEXPATH

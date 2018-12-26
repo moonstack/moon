@@ -28,11 +28,7 @@ trap fuCLEANUP EXIT
 if [ "$myDUMP" = "" ];
   then
     echo $myCOL1"### Please provide a backup file name."$myCOL0 
-<<<<<<< HEAD
     echo $myCOL1"### import_kibana-objects.sh <kibana-objects.tgz>"$myCOL0
-=======
-    echo $myCOL1"### import-kibana-objects.sh <kibana-objects.tgz>"$myCOL0
->>>>>>> origin/master
     echo 
     exit
 fi

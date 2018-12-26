@@ -124,11 +124,7 @@ fi
 
 # 检查所有依赖项
 function fuGET_DEPS {
-<<<<<<< HEAD
 local myPACKAGES="apache2-utils apparmor apt-transport-https aufs-tools bash-completion build-essential ca-certificates cgroupfs-mount cockpit cockpit-docker curl debconf-utils dialog dnsutils docker.io docker-compose dstat ethtool fail2ban genisoimage git glances grc html2text htop ifupdown iptables iw jq libcrack2 libltdl7 lm-sensors man mosh multitail net-tools npm ntp openssh-server openssl pass prips software-properties-common syslinux psmisc pv python-pip unattended-upgrades unzip vim wireless-tools wpasupplicant"
-=======
-local myPACKAGES="apache2-utils apparmor apt-transport-https aufs-tools bash-completion build-essential ca-certificates cgroupfs-mount cockpit cockpit-docker curl debconf-utils  dialog dnsutils docker.io docker-compose dstat ethtool fail2ban genisoimage git glances grc html2text htop ifupdown iptables iw jq libcrack2 libltdl7 lm-sensors man mosh multitail net-tools npm ntp openssh-server openssl pass prips software-properties-common syslinux psmisc pv python-pip unattended-upgrades unzip vim wireless-tools wpasupplicant"
->>>>>>> origin/master
 echo
 echo "### 备份 /etc/apt/source.list 到 /etc/apt/source.list.bak"
 mv /etc/apt/sources.list /etc/apt/sources.list.bak
@@ -151,16 +147,9 @@ add-apt-repository "deb http://mirrors.aliyun.com/ubuntu $(lsb_release -sc) main
 echo
 echo "### 获取更新信息."
 echo
-<<<<<<< HEAD
 apt-get -y update
 echo
 echo "### 获取更新软件包."
-=======
-#Download and upgrade packages, but silently keep existing configs
-echo "docker.io docker.io/restart       boolean true" | debconf-set-selections -v
-echo "debconf debconf/frontend select noninteractive" | debconf-set-selections -v
-apt-get -y dist-upgrade -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" --force-yes
->>>>>>> origin/master
 echo
 # 下载和升级软件包,默认保留所有配置
 echo "docker.io docker.io/restart       boolean true" | debconf-set-selections -v
@@ -350,7 +339,6 @@ tput cnorm
 # 向用户询问安装风格
 if [ "$myMOON_DEPLOYMENT_TYPE" == "iso" ] || [ "$myMOON_DEPLOYMENT_TYPE" == "user" ];
   then
-<<<<<<< HEAD
     myCONF_MOON_FLAVOR=$(dialog --no-cancel --backtitle "$myBACKTITLE" --title "[ 选择需要安装的 MoonStack 风格 ]" --menu \
     "\n基本配置: 6GB RAM, 128GB SSD\n推荐配置: 8GB RAM, 256GB SSD" 15 70 7 \
     "STANDARD" "标准安装: 蜜罐, ELK, 识别引擎 & 工具" \
@@ -359,16 +347,6 @@ if [ "$myMOON_DEPLOYMENT_TYPE" == "iso" ] || [ "$myMOON_DEPLOYMENT_TYPE" == "use
     "COLLECTOR" "采集场景: Heralding, ELK, 识别引擎 & 工具" \
     "NEXTGEN" "下一代蜜网: Glutton 而不是传统蜜罐" \
     "LEGACY" "标准版(旧): 之前版本中的标准版" 3>&1 1>&2 2>&3 3>&-)
-=======
-    myCONF_MOON_FLAVOR=$(dialog --no-cancel --backtitle "$myBACKTITLE" --title "[ Choose Your MoonStack NG Edition ]" --menu \
-    "\nRequired: 6GB RAM, 128GB SSD\nRecommended: 8GB RAM, 256GB SSD" 15 70 7 \
-    "STANDARD" "Honeypots, ELK, NSM & Tools" \
-    "SENSOR" "Just Honeypots, EWS Poster & NSM" \
-    "INDUSTRIAL" "Conpot, RDPY, Vnclowpot, ELK, NSM & Tools" \
-    "COLLECTOR" "Heralding, ELK, NSM & Tools" \
-    "NEXTGEN" "NextGen (Glutton instead of Honeytrap)" \
-    "LEGACY" "Standard Edition from previous release" 3>&1 1>&2 2>&3 3>&-)
->>>>>>> origin/master
 fi
 
 # 如果安装类型为ISO, 则我们需要用户输入一个msec的密码
@@ -586,7 +564,6 @@ echo "$myNETWORK_WLANEXAMPLE" 2>&1 | tee -a /etc/network/interfaces | dialog --t
 # 修改 sources.list
 sed -i '/cdrom/d' /etc/apt/sources.list
 
-<<<<<<< HEAD
 # 确保 SSH roaming 已经关闭(CVE-2016-0777, CVE-2016-0778)
 echo "UseRoaming no" 2>&1 | tee -a /etc/ssh/ssh_config | dialog --title "[ SSH Roaming 已经关闭 ]" $myPROGRESSBOXCONF
 
@@ -595,7 +572,7 @@ npm install https://gitee.com/stackw0rm/elasticsearch-dump.git -g 2>&1 | dialog 
 pip install --upgrade pip 2>&1 | dialog --title "[ 安装 pip ]" $myPROGRESSBOXCONF
 hash -r 2>&1 | dialog --title "[ 安装 pip ]" $myPROGRESSBOXCONF
 pip install elasticsearch-curator yq 2>&1 | dialog --title "[ 安装 elasticsearch-curator, yq ]" $myPROGRESSBOXCONF
-git clone https://gitee.com/stackw0rm/moon.git -b v1.2 /opt/moon 2>&1 | dialog --title "[ 克隆 MoonStack ]" $myPROGRESSBOXCONF
+git clone https://gitee.com/stackw0rm/moon.git /opt/moon 2>&1 | dialog --title "[ 克隆 MoonStack ]" $myPROGRESSBOXCONF
 cp /opt/moon/iso/other/ctop-0.7.1-linux-amd64 -O /usr/bin/ctop 2>&1 | dialog --title "[ 安装 ctop ]" $myPROGRESSBOXCONF
 chmod +x /usr/bin/ctop 2>&1 | dialog --title "[ 安装 ctop ]" $myPROGRESSBOXCONF
 /opt/moon/iso/installer/set_mirrors.sh https://0at6ledb.mirror.aliyuncs.com 2>&1 | dialog --title "[ 设置 Aliyun Docker 镜像加速器 ]" $myPROGRESSBOXCONF
@@ -607,28 +584,6 @@ addgroup --gid 2000 moon 2>&1 | dialog --title "[ 创建 moon 用户组 ]" $myPR
 adduser --system --no-create-home --uid 2000 --disabled-password --disabled-login --gid 2000 moon 2>&1 | dialog --title "[ 创建 moon 用户 ]" $myPROGRESSBOXCONF
 
 # 设置 hostname
-=======
-# Let's make sure SSH roaming is turned off (CVE-2016-0777, CVE-2016-0778)
-echo "UseRoaming no" 2>&1 | tee -a /etc/ssh/ssh_config | dialog --title "[ Turn SSH roaming off ]" $myPROGRESSBOXCONF
-
-# Installing ctop, elasticdump, moon, yq, docker mirrors from aliyun
-npm install https://gitee.com/stackw0rm/elasticsearch-dump.git -g 2>&1 | dialog --title "[ Installing elasticsearch-dump ]" $myPROGRESSBOXCONF
-pip install --upgrade pip 2>&1 | dialog --title "[ Installing pip ]" $myPROGRESSBOXCONF
-hash -r 2>&1 | dialog --title "[ Installing pip ]" $myPROGRESSBOXCONF
-pip install elasticsearch-curator yq 2>&1 | dialog --title "[ Installing elasticsearch-curator, yq ]" $myPROGRESSBOXCONF
-git clone --branch v1.1 --depth=1 https://gitee.com/stackw0rm/moon.git /opt/moon 2>&1 | dialog --title "[ Cloning MoonStack ]" $myPROGRESSBOXCONF
-cp /opt/moon/iso/installer/ctop-0.7.1-linux-amd64 /usr/bin/ctop 2>&1 | dialog --title "[ Installing ctop ]" $myPROGRESSBOXCONF
-chmod +x /usr/bin/ctop 2>&1 | dialog --title "[ Installing ctop ]" $myPROGRESSBOXCONF
-/opt/moon/iso/installer/set_mirrors.sh https://0at6ledb.mirror.aliyuncs.com 2>&1 | dialog --title "[ Set Docker Mirrors From Aliyun ]" $myPROGRESSBOXCONF
-systemctl daemon-reload 2>&1 | dialog --title "[ Daemon-Reload ]" $myPROGRESSBOXCONF
-systemctl restart  docker 2>&1 | dialog --title "[ Restart Docker Service ]" $myPROGRESSBOXCONF
-
-# Let's create the MoonStack user
-addgroup --gid 2000 moon 2>&1 | dialog --title "[ Adding MOON user ]" $myPROGRESSBOXCONF
-adduser --system --no-create-home --uid 2000 --disabled-password --disabled-login --gid 2000 moon 2>&1 | dialog --title "[ Adding MOON user ]" $myPROGRESSBOXCONF
-
-# Let's set the hostname
->>>>>>> origin/master
 a=$(fuRANDOMWORD /opt/moon/host/usr/share/dict/a.txt)
 n=$(fuRANDOMWORD /opt/moon/host/usr/share/dict/n.txt)
 myHOST=$a$n
@@ -639,17 +594,10 @@ if [ -f "/etc/cloud/cloud.cfg" ];
     sed -i 's/preserve_hostname: false/preserve_hostname: true/' /etc/cloud/cloud.cfg
 fi
 
-<<<<<<< HEAD
 # 修改 cockpit.socket, sshd_config
 sed -i 's#ListenStream=9090#ListenStream=64294#' /lib/systemd/system/cockpit.socket 2>&1 | dialog --title "[ Cockpit 端口修改为 tcp/64294 ]" $myPROGRESSBOXCONF
 sed -i '/^port/Id' /etc/ssh/sshd_config 2>&1 | dialog --title "[ SSH 端口修改为 tcp/64295 ]" $myPROGRESSBOXCONF
 echo "Port 64295" >> /etc/ssh/sshd_config 2>&1 | dialog --title "[ SSH 端口修改为 tcp/64295 ]" $myPROGRESSBOXCONF
-=======
-# Let's patch cockpit.socket, sshd_config
-sed -i 's#ListenStream=9090#ListenStream=64294#' /lib/systemd/system/cockpit.socket 2>&1 | dialog --title "[ Cockpit listen on tcp/64294 ]" $myPROGRESSBOXCONF
-sed -i '/^port/Id' /etc/ssh/sshd_config && echo "Port 64295" >> /etc/ssh/sshd_config 2>&1 | dialog --title "[ SSH listen on tcp/64295 ]" $myPROGRESSBOXCONF
-echo "Port 64295" >> /etc/ssh/sshd_config 2>&1 | dialog --title "[ SSH listen on tcp/64295 ]" $myPROGRESSBOXCONF
->>>>>>> origin/master
 
 # 确保只有一个配置被启动
 case $myCONF_MOON_FLAVOR in
@@ -670,11 +618,7 @@ case $myCONF_MOON_FLAVOR in
     ln -s /opt/moon/etc/compose/collector.yml $myMOONCOMPOSE 2>&1>/dev/null
   ;;
   NEXTGEN)
-<<<<<<< HEAD
     echo "### 即将执行 NEXTGEN (下一代蜜网)安装."
-=======
-    echo "### Preparing NEXTGEN flavor installation."
->>>>>>> origin/master
     ln -s /opt/moon/etc/compose/nextgen.yml $myMOONCOMPOSE 2>&1>/dev/null
   ;;
   LEGACY)
@@ -758,11 +702,7 @@ myCRONJOBS="
 # 上传的二进制文件不能下载
 */1 * * * *     root    mv --backup=numbered /data/dionaea/roots/ftp/* /data/dionaea/binaries/
 
-<<<<<<< HEAD
 # 每天重新启动
-=======
-# Daily reboot
->>>>>>> origin/master
 27 3 * * *      root    systemctl stop moon && docker stop \$(docker ps -aq) || docker rm \$(docker ps -aq) || reboot
 
 # 每周日检查升级的软件包, 自动下载并重新启动
@@ -825,13 +765,8 @@ $myROOTPROMPT
 PATH="$PATH:/opt/moon/bin"
 EOF
 for i in $(ls -d /home/*/)
-<<<<<<< HEAD
   do
 tee -a $i.bashrc 2>&1>/dev/null <<EOF
-=======
-   do
- tee -a $i.bashrc 2>&1>/dev/null <<EOF
->>>>>>> origin/master
 $myUSERPROMPT
 PATH="$PATH:/opt/moon/bin"
 EOF
@@ -848,18 +783,9 @@ apt-get autoremove -y 2>&1 | dialog --title "[ apt自动卸载过期软件包 ]"
 cp /opt/moon/host/etc/rc.local /etc/rc.local 2>&1>/dev/null && \
 rm -rf /root/installer 2>&1>/dev/null && \
 if [ "$myMOON_DEPLOYMENT_TYPE" == "auto" ];
-<<<<<<< HEAD
   then
     echo "完成. 请重启."
   else
     dialog --no-ok --no-cancel --backtitle "$myBACKTITLE" --title "[ 感谢您的耐心等待, 即将重新启动. ]" --pause "" 6 80 2 && \
     reboot
 fi
-=======
-   then
-     echo "Done. Please reboot."
-   else
-     dialog --no-ok --no-cancel --backtitle "$myBACKTITLE" --title "[ Thanks for your patience. Now rebooting. ]" --pause "" 6 80 2 && \
-     reboot
- fi
->>>>>>> origin/master

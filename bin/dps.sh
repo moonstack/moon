@@ -31,16 +31,16 @@ while true
         echo "$myDPS"
     fi
     for i in $myCONTAINERS; do
-      myAVAIL=$(echo "$myDPSNAMES" | grep -o "$i" | uniq | wc -l)
+      myAVAIL=$(echo "$myDPSNAMES" | grep -o "$i" | uniq | wc -l)      	    
       if [ "$myAVAIL" = "0" ];
 	then
 	  printf "%-28s %-28s\n" "$myRED$i" "DOWN$myWHITE"
       fi
     done
     if [[ $myPARAM =~ ^([1-9]|[1-9][0-9]|[1-9][0-9][0-9])$ ]];
-      then
+      then 
         sleep "$myPARAM"
-      else
+      else 
         break
     fi
 done
