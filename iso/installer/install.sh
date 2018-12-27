@@ -229,7 +229,7 @@ export DIALOGRC=/etc/dialogrc
 myBACKTITLE="MoonStack-Installer"
 myCONF_FILE="/root/installer/iso.conf"
 myPROGRESSBOXCONF=" --backtitle "$myBACKTITLE" --progressbox 24 80"
-mySITES="https://hub.docker.com https://github.com https://pypi.python.org https://ubuntu.com"
+mySITES="https://hub.docker.com https://gitee.com https://pypi.python.org https://ubuntu.com"
 myMOONCOMPOSE="/opt/moon/etc/moon.yml"
 
 #####################
