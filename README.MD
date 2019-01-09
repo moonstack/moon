@@ -8,7 +8,7 @@
 
 # 系统组成
 
-MoonStack v1.2 运行在 Ubuntu 18.04.x LTS 操作系统上, 基于 Docker 和 Docker-Compose .
+MoonStack v1.2.1 运行在 Ubuntu 16.04.x LTS 操作系统上, 基于 Docker 和 Docker-Compose .
 
 # 运行需求
 

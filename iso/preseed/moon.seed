@@ -26,8 +26,8 @@ d-i console-setup/detected note
 ### Network Configuration
 #########################
 d-i netcfg/do_not_use_netplan true
-#d-i netcfg/choose_interface select auto
-#d-i netcfg/dhcp_timeout string 60
+d-i netcfg/choose_interface select manual
+d-i netcfg/dhcp_timeout string 60
 d-i netcfg/get_hostname string moonstack
 
 ###############
