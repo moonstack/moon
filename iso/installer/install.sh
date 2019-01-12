@@ -6,7 +6,7 @@
 ##################################
 
 myLSB=$(lsb_release -r | awk '{ print $2 }')
-myLSB_SUPPORTED="16.04"
+myLSB_SUPPORTED="18.04"
 myINFO="\
 ################################################
 ### MoonStack Installer for Ubuntu $myLSB_SUPPORTED LTS ###
@@ -62,7 +62,7 @@ for i in "$@"
         echo "  A configuration example is available in \"moonce/iso/installer/moon.conf.dist\"."
         echo
         echo "--type=<[user, auto, iso]>"
-        echo "  user, use this if you want to manually install a MoonStack on a Ubuntu 16.04 LTS machine."
+        echo "  user, use this if you want to manually install a MoonStack on a Ubuntu 18.04 LTS machine."
         echo "  auto, implied if a configuration file is passed as an argument for automatic deployment."
         echo "  iso, use this if you are a MoonStack developer and want to install a MoonStack from a pre-compiled iso."
         echo
@@ -130,24 +130,21 @@ echo "### Backup /etc/apt/source.list to /etc/apt/source.list.bak"
 mv /etc/apt/sources.list /etc/apt/sources.list.bak
 echo
 echo "Write sources.list For mirrors.aliyun.com"
-echo "deb http://mirrors.aliyun.com/ubuntu/ xenial main" > /etc/apt/sources.list
-echo "deb-src http://mirrors.aliyun.com/ubuntu/ xenial main" >> /etc/apt/sources.list
-echo "deb http://mirrors.aliyun.com/ubuntu/ xenial-updates main" >> /etc/apt/sources.list
-echo "deb-src http://mirrors.aliyun.com/ubuntu/ xenial-updates main" >> /etc/apt/sources.list
-echo "deb http://mirrors.aliyun.com/ubuntu/ xenial universe" >> /etc/apt/sources.list
-echo "deb-src http://mirrors.aliyun.com/ubuntu/ xenial universe" >> /etc/apt/sources.list
-echo "deb http://mirrors.aliyun.com/ubuntu/ xenial-updates universe" >> /etc/apt/sources.list
-echo "deb-src http://mirrors.aliyun.com/ubuntu/ xenial-updates universe" >> /etc/apt/sources.list
-echo "deb http://mirrors.aliyun.com/ubuntu/ xenial-security main" >> /etc/apt/sources.list
-echo "deb-src http://mirrors.aliyun.com/ubuntu/ xenial-security main" >> /etc/apt/sources.list
-echo "deb http://mirrors.aliyun.com/ubuntu/ xenial-security universe" >> /etc/apt/sources.list
-echo "deb-src http://mirrors.aliyun.com/ubuntu/ xenial-security universe" >> /etc/apt/sources.list
+echo "deb https://mirrors.aliyun.com/ubuntu/ bionic main restricted universe multiverse" > /etc/apt/sources.list
+echo "deb-src https://mirrors.aliyun.com/ubuntu/ bionic main restricted universe multiverse" >> /etc/apt/sources.list
+echo "deb https://mirrors.aliyun.com/ubuntu/ bionic-security main restricted universe multiverse" >> /etc/apt/sources.list
+echo "deb-src https://mirrors.aliyun.com/ubuntu/ bionic-security main restricted universe multiverse" >> /etc/apt/sources.list
+echo "deb https://mirrors.aliyun.com/ubuntu/ bionic-updates main restricted universe multiverse" >> /etc/apt/sources.list
+echo "deb-src https://mirrors.aliyun.com/ubuntu/ bionic-updates main restricted universe multiverse" >> /etc/apt/sources.list
+echo "deb https://mirrors.aliyun.com/ubuntu/ bionic-backports main restricted universe multiverse" >> /etc/apt/sources.list
+echo "deb-src https://mirrors.aliyun.com/ubuntu/ bionic-backports main restricted universe multiverse" >> /etc/apt/sources.list
 echo
 echo "### Starting Update...."
 echo
 apt-get -y update
 apt-get -y install software-properties-common
-add-apt-repository "deb http://archive.ubuntu.com/ubuntu $(lsb_release -sc) main universe restricted multiverse"
+# Delete testing
+##add-apt-repository "deb http://mirrors.aliyun.com/ubuntu $(lsb_release -sc) main universe restricted multiverse"
 echo
 echo "### Getting update information."
 echo

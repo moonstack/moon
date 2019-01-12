@@ -1,4 +1,4 @@
-# The MoonStack v1.2
+# The MoonStack v1.2.1
 
 又一个自称改变世界的开源大数据分析引擎
 
@@ -8,7 +8,7 @@
 
 # 系统组成
 
-MoonStack v1.2.1 运行在 Ubuntu 16.04.x LTS 操作系统上, 基于 Docker 和 Docker-Compose .
+MoonStack v1.2.1 运行在 Ubuntu last LTS 操作系统上, 基于 Docker 和 Docker-Compose .
 
 # 运行需求
 
