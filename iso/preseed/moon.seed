@@ -14,7 +14,7 @@ d-i localechooser/preferred-locale string en_US.UTF-8
 ### Keyboard Selection
 ######################
 #d-i console-setup/ask_detect boolean true
-d-i keyboard-configuration/layoutcode string us
+#d-i keyboard-configuration/layoutcode string us
 d-i console-setup/detected note
 
 #############################
@@ -26,8 +26,8 @@ d-i console-setup/detected note
 ### Network Configuration
 #########################
 d-i netcfg/do_not_use_netplan true
-d-i netcfg/choose_interface select manual
-d-i netcfg/dhcp_timeout string 60
+#d-i netcfg/choose_interface select manual
+#d-i netcfg/dhcp_timeout string 60
 d-i netcfg/get_hostname string moonstack
 
 ###############
