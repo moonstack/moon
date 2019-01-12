@@ -77,7 +77,7 @@ echo
 # 检查版本
 function fuCHECK_VERSION () {
 local myMINVERSION="v1.1"
-local myMASTERVERSION="v1.2"
+local myMASTERVERSION="v1.2.1"
 echo
 echo "### 检查版本号 ..."
 if [ -f "版本号" ];
